@@ -1,56 +1,24 @@
 import { Text, View, StyleSheet, Image } from "react-native"
 import { Link, router } from "expo-router"
-import { createContext, useState } from "react"
-import { Provider, Menu, Button, Divider } from 'react-native-paper';
+import ChoseYear from '@/components/ChoseYear'
+import { Provider } from "react-native-paper"
 
 let Mon: number
+let Year: number
 const getMonth: (month: number) => void = month => Mon = month
-export const ShownDay = createContext('')//日历组件的显示年月数据
+const getYear: (year: number) => void = year => Year = year
 
-
-
-function PaperMenu() {
-  const [visible, setVisible] = useState(false);
-
-  return (
-    <Provider>
-        <Menu
-        visible={visible}
-        onDismiss={() => setVisible(false)}
-        anchor={
-            <Button onPress={() => setVisible(true)} mode="contained">
-            显示菜单
-            </Button>
-        }>
-        <Menu.Item 
-            onPress={() => alert('点了选项1')} 
-            title="选项1" 
-            leadingIcon="star" 
-        />
-        <Menu.Item 
-            onPress={() => alert('点了选项2')} 
-            title="选项2" 
-            leadingIcon="heart" 
-        />
-        <Divider /> {/* 分割线 */}
-        <Menu.Item 
-            onPress={() => setVisible(false)} 
-            title="取消" 
-            leadingIcon="close" 
-        />
-        </Menu>
-    </Provider>
-  );
+interface ChoseYnMType {
+    YnM: (Y:number, M:number) => number[]
 }
 
 
-
-export default function ChoseYnM () {
-    let arr = []//月份
+export default function ChoseYnM ({ YnM }:ChoseYnMType) {
+    let arr = []//月份 
     for( let i = 1; i <= 12; i++) {
        arr.push(
             <Link key={`choseYnM${i}`} onPress={() => getMonth(i)} href='/'>
-            <View style={monthStyle.container}>
+            <View style={[monthStyle.container, { backgroundColor: monBGColor(i) }]} >
                 <Text style={monthStyle.son} onPress={() => router.push('/')}>{i}月</Text>
             </View>
             </Link>
@@ -60,16 +28,29 @@ export default function ChoseYnM () {
     return (
         <View style={style.container}>
             <View style={style.header}>
-
-                <PaperMenu />
+                <Provider>
+                <ChoseYear getYear={getYear} />
+                </Provider>
                 <Link style={style.arrow} href="/">
                 <Image source={require('@/assets/images/rightArrow.png')}></Image>
                 </Link>
             </View>
             <View style={style.footer}>{arr}</View>       
-            {/* <ShownDay.Provider value={Mon >= 10 ?`${}-${Mon}-01` : `${}-0${Mon}-01`} /> */}
         </View>
     )
+}
+
+function monBGColor(mon: number) {
+    const now = new Date().getMonth() +1
+    let bgColor: string
+    if ( mon < now) {
+        bgColor = '#FFF9E3'
+    } else if (mon === now) {
+        bgColor = '#FFB956'
+    } else {
+        bgColor = '#FFFFFF'
+    }
+    return bgColor 
 }
 
 const style = StyleSheet.create({
@@ -85,19 +66,19 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 20,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignContent: 'center',
     },
     arrow: {
         position: 'absolute',
-        right: 20,
-        top: 60,
+        right: 25,
+        top: '30%',
     }
 })
 const monthStyle = StyleSheet.create({
     container: {
         height: 110,
         width: 110,
-        backgroundColor: '#FFFFFF',
         borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center'

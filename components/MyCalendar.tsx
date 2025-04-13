@@ -21,7 +21,7 @@ LocaleConfig.defaultLocale = 'zh';
 
 const colorArr: String[] = ['#FDB44B', '#FEE8C9', '#DADADA']
 
-
+const YnM = (Y:number, M:number) => [Y, M]
 
     return  (
         <View style={style.container} >
@@ -72,8 +72,8 @@ const colorArr: String[] = ['#FDB44B', '#FEE8C9', '#DADADA']
       enableSwipeMonths={false}
       disableMonthChange={true}
       // 功能配置
-      onDayPress={(day) => console.log('选中日期:', day)}
-      onMonthChange={(month) => console.log('切换月份:', month)}
+      // onDayPress={(day) => console.log('选中日期:', day)}
+      // onMonthChange={(month) => console.log('切换月份:', month)}
       // 标记今天
       markedDates={{
           [new Date().toISOString().split('T')[0]]: {

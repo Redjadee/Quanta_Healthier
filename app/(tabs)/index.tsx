@@ -7,7 +7,7 @@ export default function Index() {
   let copyDate: string = ''
   if (date.getMonth()+1 < 10) copyDate = '0' + (date.getMonth()+1)
   const now = date.getMonth()+1 >= 10 ?`${date.getFullYear()}-${date.getMonth()+1}-01` : `${date.getFullYear()}-${copyDate}-01`
-//日历生成器(?
+//生成现在时间
   
   return (
     <View style={style.container} >
