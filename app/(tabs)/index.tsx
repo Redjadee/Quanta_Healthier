@@ -2,17 +2,23 @@ import { Text, View, StyleSheet, Image } from "react-native";
 import { Link } from "expo-router"
 import  MyCalendar  from "@/components/MyCalendar"
 
+import { DateProvider, useDate } from "@/src/context/DateContext"
+import { useMemo } from "react";
+
 export default function Index() {
-  const date = new Date()
-  let copyDate: string = ''
-  if (date.getMonth()+1 < 10) copyDate = '0' + (date.getMonth()+1)
-  const now = date.getMonth()+1 >= 10 ?`${date.getFullYear()}-${date.getMonth()+1}-01` : `${date.getFullYear()}-${copyDate}-01`
+  const { setedMon, setedYear } = useDate()
+  const calNow = useMemo(() => {
+    let copyDate: string = ''
+    if (setedMon < 10) copyDate = '0' + (setedMon)
+    const now = setedMon >= 10 ?`${setedYear}-${setedMon}-01` : `${setedYear}-${copyDate}-01`
+    return now
+  }, [setedYear,setedMon])
 //生成现在时间
-  
+
   return (
-    <View style={style.container} >
+      <View style={style.container} >
       <View style={style.header}>
-        <Text style={style.headerText} >年月</Text>
+        <Text style={style.headerText} >{setedYear}年{setedMon}月</Text>
         
         <Link href="/choseYnM" style={style.arrowContainer}>
         <Image source={require('@/assets/images/leftArrow.png')} />
@@ -24,9 +30,9 @@ export default function Index() {
         </View>
       
       </View>
-      <MyCalendar now={now} />
+      <MyCalendar now={calNow} />
       <View style={style.statusbar}><Text>占位！！</Text></View>
-    </View>
+      </View>
   );
 }
 

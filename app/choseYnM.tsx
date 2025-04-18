@@ -2,28 +2,53 @@ import { Text, View, StyleSheet, Image } from "react-native"
 import { Link, router } from "expo-router"
 import ChoseYear from '@/components/ChoseYear'
 import { Provider } from "react-native-paper"
+import { useMemo } from "react"
 
-let Mon: number
-let Year: number
-const getMonth: (month: number) => void = month => Mon = month
-const getYear: (year: number) => void = year => Year = year
+import { useDate } from "@/src/context/DateContext"
 
-interface ChoseYnMType {
-    YnM: (Y:number, M:number) => number[]
-}
+export default function ChoseYnM () {
+    const { setedYear, setSetedYear, setSetedMon } = useDate()
 
-
-export default function ChoseYnM ({ YnM }:ChoseYnMType) {
-    let arr = []//月份 
-    for( let i = 1; i <= 12; i++) {
-       arr.push(
-            <Link key={`choseYnM${i}`} onPress={() => getMonth(i)} href='/'>
-            <View style={[monthStyle.container, { backgroundColor: monBGColor(i) }]} >
-                <Text style={monthStyle.son} onPress={() => router.push('/')}>{i}月</Text>
-            </View>
-            </Link>
-       )
+    function getYear(year: number): void {
+        setSetedYear(year)
     }
+
+    const DynamicMonthStyle = useMemo(() => { 
+        interface reType {
+            backgroundColor: string
+            color: string
+        }
+        const styles: reType[] = []
+        const fun: (month: number) => reType = month => {
+            const nowYear = new Date().getFullYear()
+            const nowMonth = new Date().getMonth()+1
+            let bgcolor: string
+            let color: string
+    
+            if (nowYear === setedYear && month === nowMonth) {
+                bgcolor = '#FFB956'
+                color = 'white'
+            } else if (nowYear === setedYear) {
+                bgcolor = month > nowMonth ? '#FFFFFF' : '#FFF9E3'
+                color = '#999999'
+            } else {
+                color = '#999999'
+                bgcolor = nowYear > setedYear ? '#FFF9E3' : '#FFFFFF'
+            }
+    
+            let re: reType = {
+                backgroundColor: bgcolor,
+                color: color
+            }
+    
+            return re
+        }
+        for (let i = 1; i <= 12; i++) {
+          styles.push(fun(i))
+        }
+        return styles
+      }, [setedYear]) 
+
 
     return (
         <View style={style.container}>
@@ -35,23 +60,24 @@ export default function ChoseYnM ({ YnM }:ChoseYnMType) {
                 <Image source={require('@/assets/images/rightArrow.png')}></Image>
                 </Link>
             </View>
-            <View style={style.footer}>{arr}</View>       
+            <View style={style.footer}>
+            {Array.from({ length: 12 }, (_, i) => (
+            <Link key={`choseYnM${i+1}`} onPress={() => setSetedMon(i+1)} href='/'>
+            <View style={[monthStyle.container, { backgroundColor: DynamicMonthStyle?.[i]?.backgroundColor ?? '#FFFFFF'}]}>
+                <Text 
+                style={[monthStyle.son, {color: DynamicMonthStyle?.[i]?.color ?? '#999999'}]} 
+                onPress={() => { router.push('/'); setSetedMon(i+1)}}
+                >
+                {i+1}月
+                </Text>
+            </View>
+            </Link>
+            ))}
+            </View>       
         </View>
     )
 }
 
-function monBGColor(mon: number) {
-    const now = new Date().getMonth() +1
-    let bgColor: string
-    if ( mon < now) {
-        bgColor = '#FFF9E3'
-    } else if (mon === now) {
-        bgColor = '#FFB956'
-    } else {
-        bgColor = '#FFFFFF'
-    }
-    return bgColor 
-}
 
 const style = StyleSheet.create({
     container: {
@@ -62,7 +88,7 @@ const style = StyleSheet.create({
         flex: 4
     },
     footer: {
-        flex: 12,
+        flex: 15,
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 20,
@@ -72,7 +98,7 @@ const style = StyleSheet.create({
     arrow: {
         position: 'absolute',
         right: 25,
-        top: '30%',
+        top: '35%',
     }
 })
 const monthStyle = StyleSheet.create({
@@ -86,6 +112,5 @@ const monthStyle = StyleSheet.create({
     son: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#999999'
     }
 })

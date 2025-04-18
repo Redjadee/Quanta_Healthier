@@ -10,7 +10,8 @@ interface ChoseYearProps { //使用接口而不是类型定义
 export default function ChoseYear({ getYear }:ChoseYearProps) {
   const [visible, setVisible] = useState(false);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  getYear(selectedYear)
+
+  
   // 生成年份范围（当前年前后5年）
   const generateYears = () => {
     const currentYear = new Date().getFullYear();
@@ -29,7 +30,7 @@ export default function ChoseYear({ getYear }:ChoseYearProps) {
             style={styles.yearBox}
           >
             <View style={styles.yearContent}>
-              <Text style={styles.yearText}>{selectedYear}</Text>
+              <Text style={[styles.yearText, {color: 'white', fontSize: 20}]}>{selectedYear}</Text>
               <MaterialIcons 
                 name={visible ? 'arrow-drop-up' : 'arrow-drop-down'} 
                 size={24} 
@@ -46,6 +47,7 @@ export default function ChoseYear({ getYear }:ChoseYearProps) {
               key={year}
               onPress={() => {
                 setSelectedYear(year);
+                getYear(year);
                 setVisible(false);
               }}
               style={[
@@ -53,7 +55,7 @@ export default function ChoseYear({ getYear }:ChoseYearProps) {
                 year === selectedYear && styles.selectedYear
               ]}
             >
-              <Text style={styles.yearText}>{year}</Text>
+              <Text style={[styles.yearText, year === selectedYear && {color: 'white'}]}>{year}</Text>
             </TouchableRipple>
           ))}
         </ScrollView>
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     yearText: {
-      fontSize: 20,
+      fontSize: 17,
       fontWeight: 'bold',
       textAlign: 'center',
       width: '100%',

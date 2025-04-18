@@ -21,14 +21,13 @@ LocaleConfig.defaultLocale = 'zh';
 
 const colorArr: String[] = ['#FDB44B', '#FEE8C9', '#DADADA']
 
-const YnM = (Y:number, M:number) => [Y, M]
 
     return  (
         <View style={style.container} >
             <Calendar 
                 style={style.calen}
     // 基础配置
-    //new Date().toISOString()
+    //
       current={now}
       
       // 样式配置

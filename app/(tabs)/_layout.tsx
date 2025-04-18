@@ -4,7 +4,6 @@ import { Image } from "react-native"
 
 export default function TabLayout() {
     type tabType = {focused: Boolean}
-    const [focus, setfocus] = useState('')
 
     return(
         <Tabs
