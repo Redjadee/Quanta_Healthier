@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableWithoutFeedback, StyleSheet, Platform } from 'react-native';
 import { Menu, TouchableRipple } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useDate } from '@/src/context/DateContext';
 
 interface ChoseYearProps { //使用接口而不是类型定义
     getYear: (year: number) => void;
@@ -10,7 +11,7 @@ interface ChoseYearProps { //使用接口而不是类型定义
 export default function ChoseYear({ getYear }:ChoseYearProps) {
   const [visible, setVisible] = useState(false);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-
+  const { setedYear } = useDate()
   
   // 生成年份范围（当前年前后5年）
   const generateYears = () => {
@@ -30,7 +31,7 @@ export default function ChoseYear({ getYear }:ChoseYearProps) {
             style={styles.yearBox}
           >
             <View style={styles.yearContent}>
-              <Text style={[styles.yearText, {color: 'white', fontSize: 20}]}>{selectedYear}</Text>
+              <Text style={[styles.yearText, {color: 'white', fontSize: 20}]}>{setedYear}</Text>
               <MaterialIcons 
                 name={visible ? 'arrow-drop-up' : 'arrow-drop-down'} 
                 size={24} 

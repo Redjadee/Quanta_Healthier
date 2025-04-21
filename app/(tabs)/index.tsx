@@ -18,12 +18,12 @@ export default function Index() {
   return (
       <View style={style.container} >
       <View style={style.header}>
-        <Text style={style.headerText} >{setedYear}年{setedMon}月</Text>
-        
         <Link href="/choseYnM" style={style.arrowContainer}>
         <Image source={require('@/assets/images/leftArrow.png')} />
         </Link>
         
+        <Text style={style.headerText} >{setedYear}年{setedMon}月</Text>
+
         <View style={style.analysisContainer} >
           <Image source={require('@/assets/images/analysis.png')} style={{ width: 24, height: 24 }}></Image>
           <Text style={style.analysisLabel} >分析</Text>
@@ -47,23 +47,22 @@ const style = StyleSheet.create({
     paddingTop: 30,
     flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
+    gap: '25%'
   },
   headerText: {
     fontSize: 20,
-    color: '#706F6D'
+    color: '#706F6D',
+    position: 'relative',
+    top: -5
   },
   arrowContainer: {
-    position: 'absolute',
-    left: -150,
-    top: 40
+    width: 20,
+    height: 20
   },
   analysisContainer: {
     flexDirection: 'column',
     alignItems: 'center',
-
-    position:'absolute',
-    top: 30,
-    right: -150
   },
   analysisLabel: {
     color: '#908C86',

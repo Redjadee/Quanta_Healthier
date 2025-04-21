@@ -3,7 +3,6 @@ import { Link, router } from "expo-router"
 import ChoseYear from '@/components/ChoseYear'
 import { Provider } from "react-native-paper"
 import { useMemo } from "react"
-
 import { useDate } from "@/src/context/DateContext"
 
 export default function ChoseYnM () {
@@ -77,7 +76,6 @@ export default function ChoseYnM () {
         </View>
     )
 }
-
 
 const style = StyleSheet.create({
     container: {
