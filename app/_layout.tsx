@@ -9,6 +9,7 @@ export default function RootLayout() {
       <Stack.Screen name='+not-found'></Stack.Screen>
       <Stack.Screen name='choseYnM' options={{ headerShown: false }}></Stack.Screen>
       <Stack.Screen name="publishMyQ" options={{ headerShown: false }}></Stack.Screen>
+      <Stack.Screen name="comment/[id]" options={{ headerShown: false }}></Stack.Screen>
     </Stack>
     </DateProvider>
   )

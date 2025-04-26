@@ -1,43 +1,11 @@
-import { useMemo, useState } from "react"
-import { View, Text, StyleSheet, Image, Pressable } from "react-native"
+import { Text, View, StyleSheet, Image, Pressable } from 'react-native'
+import { useState, useMemo } from 'react'
 
-
-function Tags() {
-    let tags: string[] = ['熬夜','熬夜危害']
-    const re = tags.map((item, index) => (
-        <View key={`Tags${index}`} style={tagsStyle.tagBox} >
-            <Text style={tagsStyle.tag} >{`#${item}`}</Text>
-        </View>
-    ))
-    return (
-        <View style={tagsStyle.container} >
-            {re}
-        </View>
-    )
-}
-
-const tagsStyle = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        gap: 15
-    },
-    tagBox: {
-        backgroundColor: 'rgba(204, 204, 204, 0.4)',
-        borderRadius: 15,
-        paddingVertical: 5,
-        paddingTop: 3,
-        paddingInline: 10
-    },
-    tag: {
-        color: '#888888',
-        fontSize: 12,
-    }
-})
 
 function LikeCommentShare() {
     const [iLike, setILike] = useState(false)
 
-
+    //获取
     let like: number = 111
     let comment: number = 222
     let share: number = 333
@@ -66,7 +34,7 @@ function LikeCommentShare() {
     }
     
     let re = LCSArrL.map((item, index) => (
-        <Pressable onPress={() => {LCSEvent(index)}}  key={`LCS${index}`} style={[LCSSTyle.style, index+1 === 2 && LCSSTyle.style2, index+1 === 3 && LCSSTyle.style3]} >
+        <Pressable onPress={() => {LCSEvent(index)}}  key={`LCS${index}`} style={[LCSSTyle.style]} >
             <Image source={item}></Image>
             <Text style={LCSSTyle.number} >{LCSArrR[index]}</Text>
         </Pressable>
@@ -84,30 +52,26 @@ const LCSSTyle = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 10,
         alignItems: 'center',
+        gap: 25
     },
     style: {
         flexDirection: 'row',
-        gap: 5,
+        gap: 6,
         alignItems: 'center'
     },
-    style2: {
-        marginLeft: 10
-    },
-    style3: {
-        position: 'absolute',
-        right: 40
-    },
     number: {
-        color: '#666666'
+        color: '#999999'
     }
 })
 
 function UploadedImg() {
+    //获取
+    
     let postImg: (string | undefined )
     return (
         <>
-            {/* {postImg ? <Image source={{ uri:postImg }} ></Image> : <></>} */}
-            <Image source={require('@/assets/images/wife.png')}  style={uploadImgStyle.style} ></Image>
+            {postImg ? <Image source={{ uri:postImg }} ></Image> : <></>}
+            {/* <Image source={require('@/assets/images/wife.png')}  style={uploadImgStyle.style} ></Image> */}
         </>
     )
 }
@@ -121,9 +85,9 @@ const uploadImgStyle = StyleSheet.create({
 })
 
 //问答的组块
-export default function Comment() {
-    const usename: string = '用户名'
-    const postTime: string = '一天前'
+export default function Article() {
+    //获取！
+    const username: string = '用户名'
     const postContent: string = '孩子一直熬夜怎么办？'
     
     let profile: (string | undefined)
@@ -134,15 +98,11 @@ export default function Comment() {
         <View style={style.container} >
             <View style={style.header} >
                 <Image source={postProfile} />
-                <View style={style.headerBox} >
-                    <Text style={style.username} >{usename}</Text>
-                    <Text style={style.postTime} >{postTime}</Text>
-                </View>
+                <Text style={style.username} >{username}</Text>
             </View>
 
             <Text style={style.postContent} >{postContent}</Text>
             <UploadedImg />
-            <Tags />
             <LikeCommentShare />
         </View>
     )
@@ -151,40 +111,30 @@ export default function Comment() {
 const style = StyleSheet.create({
     container: {
         width: '100%',
-        backgroundColor: 'rgba(251, 247, 241, 0.5)',
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
         padding: 20,
         paddingLeft: 30,
-        paddingTop: 25,
-        paddingBottom: 15,
+        paddingBottom: 10,
 
-        shadowColor: '#FC9E19',
-        shadowOffset: {
-            width: 0,                // 水平偏移
-            height: 2,               // 垂直偏移
-
-        },
-        shadowOpacity: 0.1,       // 透明度 (0~1)
-        shadowRadius: 10,        // 模糊半径
-        elevation: 3
+        borderRadius: 15,
+        borderWidth: 2,
+        borderColor: 'rgba(252, 158, 25, 0.05)',
     },
     header: {
         flexDirection: 'row',
-        marginBottom: 8
+        marginBottom: 8,
+        alignItems: 'center'
     },
     profile: {
-        
-    },
-    headerBox: {
-        marginLeft: 5
+        height: 38,
+        width: 38,
+        borderRadius: '50%'
     },
     username: {
+        marginLeft: 10,
         color: '#555555',
-        fontSize: 16,
+        fontSize: 19,
         fontWeight: '400'
-    },
-    postTime: {
-        color: '#888888',
-        fontSize: 12,
     },
     postContent: {
         color: '#555555',
@@ -192,3 +142,4 @@ const style = StyleSheet.create({
         marginBottom: 8,
     }
 })
+
