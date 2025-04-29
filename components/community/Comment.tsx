@@ -9,9 +9,9 @@ function Tags() {
     
     let tags: string[] = ['熬夜','熬夜危害']
     const re = tags.map((item, index) => (
-        <View key={`Tags${index}`} style={tagsStyle.tagBox} >
+        <Pressable key={`Tags${index}`} style={tagsStyle.tagBox} >
             <Text style={tagsStyle.tag} >{`#${item}`}</Text>
-        </View>
+        </Pressable>
     ))
     return (
         <View style={tagsStyle.container} >
@@ -40,12 +40,6 @@ const tagsStyle = StyleSheet.create({
 
 function LikeCommentShare({ id, like, comment, share }: CommentType) {
     const [iLike, setILike] = useState(false)
-
-    //准备删
-    like = 111
-    comment = 222
-    share = 333
-    //
 
     let LCSArrR: number[] = [like, comment, share]
     
@@ -109,7 +103,7 @@ function UploadedImg({ uploadImage }: CommentType) {
     return (
         <>
             {/* {uploadImage ?  : <></>} */}
-            {/* <Image source={require('@/assets/images/wife.png')}  style={uploadImgStyle.style} ></Image> */}
+            <Image source={require('@/assets/images/wife.png')}  style={uploadImgStyle.style} ></Image>
         </>
     )
 }
@@ -132,12 +126,6 @@ export default function Comment( data :CommentType ) {
         setCurrentComment(data)
         router.push({ pathname: "/comment/[id]", params: { id: String(data.id) } })
     }
-
-    //准备删
-    data.username = '用户名'
-    data.postTime = '一天前'
-    data.postContent = '孩子一直熬夜怎么办？'
-    //
 
     const postProfile = data.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
 

@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, Image, Pressable, TextInput } from "react-native"
-import { useState, useMemo } from "react"
+import { View, Text, StyleSheet, Image, Pressable, TextInput, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native"
+import { useState, useMemo, useRef, useEffect, useCallback } from "react"
 import { Link, useLocalSearchParams } from "expo-router"
 import { LinearGradient } from "expo-linear-gradient"
-import type { CommentType } from "@/src/types/commentType"
+import type { CommentType, commentCommentType } from "@/src/types/commentType"
 import { useCommentStore } from "@/src/store/commentStore"
 ////////////////////////////
 function UploadedImg({ uploadImage }: CommentType) {
@@ -12,7 +12,7 @@ function UploadedImg({ uploadImage }: CommentType) {
     return (
         <>
             {/* { ? <Image source={{ uri: }} ></Image> : <></>} */}
-            {/* <Image source={require('@/assets/images/wife.png')}  style={uploadImgStyle.style} ></Image> */}
+            <Image source={require('@/assets/images/wife.png')}  style={uploadImgStyle.style} ></Image>
         </>
     )
 }
@@ -20,19 +20,15 @@ const uploadImgStyle = StyleSheet.create({
     style: {
         width: '100%',
         height: 250
-        
     }
 })
 
 ////////////////////////////
 function Tags({ tags }: CommentType) {
-    //获取
-    
-    tags = ['熬夜','熬夜危害']
-    const re = tags.map((item, index) => (
-        <View key={`Tags${index}`}>
+    const re = tags && tags.map((item, index) => (
+        <Pressable key={`Tags${index}`}>
             <Text style={tagsStyle.tag} >{`#${item}`}</Text>
-        </View>
+        </Pressable>
     ))
     return (
         <View style={tagsStyle.container} >
@@ -53,69 +49,52 @@ const tagsStyle = StyleSheet.create({
     }
 })
 ////////////////////////////
-function Comment( data: CommentType ) {
+interface handleResponseType {
+    handleResponse: (username: string) => void
+}
+function Comment( { username, profile, postContent, postTime, postIp, like, handleResponse }: commentCommentType & handleResponseType) {
     const [iLike, setILike] = useState(false)
 
-    //准备删
-    data.username= '用户名'
-    data.postTime = '一天前'
-    data.postIp = '广东'
-    data.postContent = '好美的孩子 偷走'
-    data.like = 111
-    //
-
-    const postProfile = data.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
-    
+    const postProfile = profile? { uri: profile } : require('@/assets/images/comment/defaultImg.png')
 
     let likeIcon = useMemo(() => {
         return iLike? require('@/assets/images/comment/liked.png') : require('@/assets/images/comment/like.png')
     },[iLike])
 
     return (
-        <View>
-            <Image source={postProfile}></Image>
-            <View>
-                <Text>{data.username}</Text>
-                <View>
-                    <Text>{data.postContent}</Text>
-                    <Pressable><Text>回复</Text></Pressable>
+        <View style={{ flexDirection: 'row', marginBottom: 15}} >
+            <Image source={postProfile} style={{height: 30, width: 30, marginRight: 8}} ></Image>
+            <View style={{gap: 5}}>
+                <Text style={{color: '#666666', fontSize: 16}} >{username}</Text>
+                <View style={{ flexDirection: 'row', gap: 15, alignItems: 'center' }} >
+                    <Text style={{color: '#666666', fontSize: 16}}>{postContent}</Text>
+                    <Pressable onPress={() => {handleResponse(username)}}><Text style={{color: '#777777', fontSize: 12}} >回复</Text></Pressable>
                 </View>
-                <View>
-                    <Text>{data.postTime}</Text>
-                    <Text>{data.postIp}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                    <Text style={{color: '#888888', fontSize: 12}}>{postTime}</Text>
+                    <Text style={{color: '#888888', fontSize: 12}}>{postIp}</Text>
                 </View>
             </View>
-            <View>
-                <Image source={likeIcon}></Image>
-                <Text>{data.like}</Text>
+            <View style={{position: 'absolute', right: 20, top: 25, alignItems: 'center'}}>
+                <Pressable onPress={()=>setILike(!iLike)}><Image source={likeIcon}></Image></Pressable>
+                <Text>{like}</Text>
             </View>
         </View>
     )
 }
 
-const commentStyle = StyleSheet.create({
-    container: {
-
-    },
-    
-    body: {
-
-    }
-})
 
 ////////////////////////////
-function LikeCommentShare({ like, comment, share}: CommentType) {
+interface postCommentType {
+    postComment: () => void
+}
+
+
+function LikeCommentShare({ like, comment, share, postComment}: CommentType & postCommentType) {
     const [iLike, setILike] = useState(false)
 
-    //准备删
-    like = 111
-    comment = 222
-    share = 333
-    //
 
     let LCSArrR: number[] = [like, comment, share]
-
-
     
     let likeIcon = useMemo(() => {
         return iLike? require('@/assets/images/comment/liked.png') : require('@/assets/images/comment/like.png')
@@ -129,7 +108,7 @@ function LikeCommentShare({ like, comment, share}: CommentType) {
                 setILike(!iLike)
             };break;
             case 1:{
-                //第三重回复
+                postComment()
             };break;
             case 2:{
                 //显示分享盒子
@@ -170,6 +149,7 @@ const LCSSTyle = StyleSheet.create({
 
 
 export default function CommentDetail() {
+    const inputRef = useRef<TextInput>(null)
     const { id } = useLocalSearchParams<{id: string}>()
     const { cache } = useCommentStore()
 
@@ -177,11 +157,44 @@ export default function CommentDetail() {
 
     const postProfile = data.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
     
-    const commentList = data.commentComment.map((item, index) => (
-        <Comment {...item} key={`C${id}C${index}`} />
-    ))
-    
+    //发布评论
+    const [pCVisible, setpCVisible] = useState(false)
+    const postComment = () => {
+        setpCVisible(true)
+        setTimeout(() => {
+            inputRef.current?.focus()
+        }, 10)
+    }
+    const submitComment = () => {
+        setpCVisible(false)
+        inputRef.current?.blur()
+    }
+    //placeholder
+    const [placeHolder, setPlaceHolder] = useState('发布一条友善的评论吧~')
+
+    //评论的评论
+    const handleResponse = useCallback((username: string) => {
+        postComment()
+        setPlaceHolder(`回复@${username}: `)
+    }, [])
+    const handleBlur = useCallback(() => {
+        setPlaceHolder('发布一条友善的评论吧~') //恢复默认
+    }, [])
+
+    //渲染评论
+    const commentList = useMemo(() => {
+        return data.commentComment.map((item, index) => (
+            <Comment {...{...item, handleResponse, handleBlur}} key={`C${id}C${index}`} />
+        ))
+    },[data.commentComment])
+
     return (
+    <TouchableWithoutFeedback 
+        onPress={() => {
+            Keyboard.dismiss()
+            inputRef.current?.blur()
+            setpCVisible(false)
+        }}>
         <View style={style.container} >
             <View style={style.header} >
                 <Link href={'/community'}>
@@ -190,6 +203,8 @@ export default function CommentDetail() {
                 <Image source={postProfile} style={headerStyle.postProfile}></Image>
                 <Text style={headerStyle.username} >{data.username}</Text>
             </View>
+
+            <ScrollView>
             <UploadedImg {...data} />
             <View style={style.body} >
                 <Text style={bodyStyle.postContent} >{data.postContent}</Text>
@@ -207,18 +222,21 @@ export default function CommentDetail() {
             </Pressable>
             
             <View style={style.commentContainer} >
-                <Text style={{color: '#666666', fontSize: 16}} >评论留言</Text>
+                <Text style={{color: '#666666', fontSize: 16, marginBottom: 15}} >评论留言</Text>
                 {commentList}
             </View>
+            </ScrollView>
             
             <View style={style.tab}>
-                <View style={tabStyle.inputContainer} >
-                    <Image source={require('@/assets/images/commentDetail/writeSth.png')} ></Image>
-                    <TextInput style={tabStyle.input} ></TextInput>
-                </View>
-                <LikeCommentShare {...data} />
+                <Pressable style={[tabStyle.inputContainer, pCVisible && {width: '80%'}]} onPress={(e) => { e.stopPropagation(), postComment()}} >
+                    {!pCVisible && <Image style={{position: 'absolute', left: 15}}  source={require('@/assets/images/commentDetail/writeSth.png')} ></Image>}
+                    {!pCVisible ? <View></View> : <TextInput style={{width: '100%'}} ref={inputRef}  placeholder={placeHolder} onEndEditing={() => {handleBlur()}}></TextInput> }
+                </Pressable>
+                {!pCVisible && <LikeCommentShare {...{ ...data, postComment}} />}
+                {pCVisible && <Pressable onPress={(e) => {e.stopPropagation(), submitComment()}}><Text style={{fontSize: 17, color: '#888888', fontWeight: '500'}}>发送</Text></Pressable> }
             </View>
         </View>
+    </TouchableWithoutFeedback>
     )
 } 
 
@@ -226,20 +244,20 @@ const tabStyle = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: 'rgba(153, 153, 153, 0.18)',
         borderRadius: 18,
-        paddingLeft: 15,
-        gap: 5
-    },
-    input: {
-        width: 140,
+        paddingLeft: 10,
+        width: 170,
+        height: 40,
     }
 })
 
 const style = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        overflow: 'hidden'
     },
     header: {
         flexDirection: 'row',
@@ -266,8 +284,9 @@ const style = StyleSheet.create({
         borderTopWidth: 0.8,
         padding: 10,
         paddingInline: 25,
-        gap: 10,
-        alignItems: 'center'
+        gap: 15,
+        alignItems: 'center',
+        backgroundColor: 'white'
     }
 })
 
@@ -279,6 +298,7 @@ const headerStyle = StyleSheet.create({
     postProfile: {
         width: 48,
         height: 48,
+        borderRadius: 48/2,
     },
 })
 

@@ -1,8 +1,8 @@
 import { Text, View, StyleSheet, Image } from "react-native";
 import { Link } from "expo-router"
-import  MyCalendar  from "@/components/MyCalendar"
+import  MyCalendar  from "@/components/index/MyCalendar"
 
-import { DateProvider, useDate } from "@/src/context/DateContext"
+import { useDate } from "@/src/context/DateContext"
 import { useMemo } from "react";
 
 export default function Index() {

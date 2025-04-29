@@ -7,7 +7,7 @@ export default function PublishnMy() {
     {uri: require('@/assets/images/community/myQuestion.png'), label: '我的提问'}
   ]
   const mapedContent =  content.map((item, index) => (
-    <Pressable key={`PublishnMy${index}`} onPress={() => { index === 0 ? router.push('/publishMyQ'): router.push('/')}}>
+    <Pressable key={`PublishnMy${index}`} onPress={() => { index === 0 ? router.push('/comment/publishMyQ'): router.push('/')}}>
       <View style={style.box}>
         <Image source={item.uri} />
         <Text style={style.label} >{item.label}</Text>

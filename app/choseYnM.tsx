@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, Image } from "react-native"
 import { Link, router } from "expo-router"
-import ChoseYear from '@/components/ChoseYear'
+import ChoseYear from '@/components/index/ChoseYear'
 import { Provider } from "react-native-paper"
 import { useMemo } from "react"
 import { useDate } from "@/src/context/DateContext"
