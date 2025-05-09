@@ -14,7 +14,9 @@ export default function TabLayout() {
                 tabBarStyle: { //底部样式
                     backgroundColor: '#FEF9E4',
                     height: '8%',
-                    paddingTop: 3
+                    paddingTop: 3,
+                    elevation: 0,
+                    zIndex: 0,
                 },
             }}>
 

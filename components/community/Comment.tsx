@@ -3,11 +3,10 @@ import { View, Text, StyleSheet, Image, Pressable } from "react-native"
 import { Link, router } from 'expo-router'
 import { useCommentStore } from "@/src/store/commentStore"
 import type { CommentType } from "@/src/types/commentType"
+import { useShare } from "@/src/context/ShareContext"
 
-function Tags() {
-    //获取
-    
-    let tags: string[] = ['熬夜','熬夜危害']
+function Tags( { tags }: CommentType ) {
+    if (!tags) return
     const re = tags.map((item, index) => (
         <Pressable key={`Tags${index}`} style={tagsStyle.tagBox} >
             <Text style={tagsStyle.tag} >{`#${item}`}</Text>
@@ -38,7 +37,12 @@ const tagsStyle = StyleSheet.create({
     }
 })
 
-function LikeCommentShare({ id, like, comment, share }: CommentType) {
+interface LCSEventType {
+    HandleRouter:() => void
+    setShare: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+function LikeCommentShare({ like, comment, share, HandleRouter, setShare }: CommentType & LCSEventType) {
     const [iLike, setILike] = useState(false)
 
     let LCSArrR: number[] = [like, comment, share]
@@ -54,14 +58,17 @@ function LikeCommentShare({ id, like, comment, share }: CommentType) {
             case 0: {
                 setILike(!iLike)
             };break;
+            case 1: {
+                HandleRouter()
+            };break;
             case 2:{
-
+                setShare(true)
             }break;
         }
     }
     
     let re = LCSArrL.map((item, index) => (
-        <Pressable onPress={() => {index !== 1 && LCSEvent(index)}}  key={`LCS${index}`} style={[LCSSTyle.style, index+1 === 2 && LCSSTyle.style2, index+1 === 3 && LCSSTyle.style3]} >
+        <Pressable onPress={() => LCSEvent(index)}  key={`LCS${index}`} style={[LCSSTyle.style, index+1 === 2 && LCSSTyle.style2, index+1 === 3 && LCSSTyle.style3]} >
             <Image source={item}></Image>
             <Text style={LCSSTyle.number} >{LCSArrR[index]}</Text>
         </Pressable>
@@ -121,6 +128,7 @@ const uploadImgStyle = StyleSheet.create({
 //问答的组块
 export default function Comment( data :CommentType ) {
     const { setCurrentComment } = useCommentStore()
+    const { setShare } = useShare()
 
     const HandleRouter = () => {
         setCurrentComment(data)
@@ -141,8 +149,8 @@ export default function Comment( data :CommentType ) {
 
             <Text style={style.postContent} >{data.postContent}</Text>
             <UploadedImg {...data} />
-            <Tags />
-            <LikeCommentShare {...data} />
+            <Tags {...data} />
+            <LikeCommentShare {...{ ...data, HandleRouter, setShare }} />
         </Pressable>
     )
 }
@@ -168,7 +176,7 @@ const style = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        marginBottom: 8
+        marginBottom: 5
     },
     profile: {
         height: 38,
@@ -176,7 +184,8 @@ const style = StyleSheet.create({
         borderRadius: '50%'
     },
     headerBox: {
-        marginLeft: 5
+        marginLeft: 7,
+        gap: 3
     },
     username: {
         color: '#555555',

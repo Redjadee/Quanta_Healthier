@@ -4,6 +4,7 @@ import { Link, useLocalSearchParams } from "expo-router"
 import { LinearGradient } from "expo-linear-gradient"
 import type { CommentType, commentCommentType } from "@/src/types/commentType"
 import { useCommentStore } from "@/src/store/commentStore"
+import { useShare } from "@/src/context/ShareContext"
 ////////////////////////////
 function UploadedImg({ uploadImage }: CommentType) {
     //获取数组
@@ -25,6 +26,7 @@ const uploadImgStyle = StyleSheet.create({
 
 ////////////////////////////
 function Tags({ tags }: CommentType) {
+    if ( !tags ) return
     const re = tags && tags.map((item, index) => (
         <Pressable key={`Tags${index}`}>
             <Text style={tagsStyle.tag} >{`#${item}`}</Text>
@@ -92,7 +94,7 @@ interface postCommentType {
 
 function LikeCommentShare({ like, comment, share, postComment}: CommentType & postCommentType) {
     const [iLike, setILike] = useState(false)
-
+    const { setShare } = useShare()
 
     let LCSArrR: number[] = [like, comment, share]
     
@@ -111,7 +113,7 @@ function LikeCommentShare({ like, comment, share, postComment}: CommentType & po
                 postComment()
             };break;
             case 2:{
-                //显示分享盒子
+                setShare(true)
             }break;
         }
     }
@@ -273,7 +275,8 @@ const style = StyleSheet.create({
         borderBottomColor: 'rgba(153, 153, 153, 0.68)'
     },
     commentContainer: {
-        marginInline: 20
+        marginInline: 20,
+        marginBottom: 80
     },
     tab: {
         position: 'absolute',

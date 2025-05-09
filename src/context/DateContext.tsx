@@ -16,8 +16,6 @@ interface DateContextType {
     const [setedYear, setSetedYear] = useState(new Date().getFullYear());
     const [setedMon, setSetedMon] = useState(new Date().getMonth() + 1);
   
-
-  
     // ✅ memo化
     const contextValue = useMemo(() => ({
       setedYear,

@@ -1,8 +1,10 @@
 import { DateProvider } from "@/src/context/DateContext"
+import { ShareProvider } from "@/src/context/ShareContext"
 import { Stack } from "expo-router"
 
 export default function RootLayout() {
   return(
+    <ShareProvider>
     <DateProvider>
     <Stack>
       <Stack.Screen name='(tabs)' options={{ headerShown: false }}></Stack.Screen>
@@ -12,5 +14,6 @@ export default function RootLayout() {
       <Stack.Screen name="comment/[id]" options={{ headerShown: false }}></Stack.Screen>
     </Stack>
     </DateProvider>
+    </ShareProvider>
   )
 }
