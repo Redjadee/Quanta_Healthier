@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Text, TextInput, View, StyleSheet, Pressable, Image, ScrollView } from "react-native";
-
 import CommunityTab from "@/components/community/CommunityTab"
 import PublishnMy from "@/components/community/PublishnMy"
 import HotTopic from "@/components/community/HotTopic"
@@ -221,6 +220,7 @@ export default function Community() {
         {showLeft ? <Question /> : <Articles />}
       </ScrollView>
       </View>
+      <Share />
     </LinearGradient>
   )
 }

@@ -9,9 +9,10 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen name='(tabs)' options={{ headerShown: false }}></Stack.Screen>
       <Stack.Screen name='+not-found'></Stack.Screen>
-      <Stack.Screen name='choseYnM' options={{ headerShown: false }}></Stack.Screen>
+      <Stack.Screen name='home/choseYnM' options={{ headerShown: false }}></Stack.Screen>
       <Stack.Screen name="comment/publishMyQ" options={{ headerShown: false }}></Stack.Screen>
       <Stack.Screen name="comment/[id]" options={{ headerShown: false }}></Stack.Screen>
+      <Stack.Screen name="tags/[label]" ></Stack.Screen>
     </Stack>
     </DateProvider>
     </ShareProvider>

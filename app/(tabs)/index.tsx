@@ -18,7 +18,7 @@ export default function Index() {
   return (
       <View style={style.container} >
       <View style={style.header}>
-        <Link href="/choseYnM" style={style.arrowContainer}>
+        <Link href="/home/choseYnM" style={style.arrowContainer}>
         <Image source={require('@/assets/images/leftArrow.png')} />
         </Link>
         

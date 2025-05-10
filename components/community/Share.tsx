@@ -1,6 +1,7 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs"
 import { View, Text, StyleSheet, Pressable, Image } from "react-native"
 import { useShare } from "@/src/context/ShareContext"
+import Modal from 'react-native-modal'
 
 function Upper() {
     const nameArr = ['微信好友', '朋友圈', 'QQ好友', 'QQ空间']
@@ -58,15 +59,28 @@ export default function Share() {
     const { share, setShare } = useShare()
 
     return (
-        <View style={[style.container, {bottom: 0-useBottomTabBarHeight()}]}>
-            <View style={style.header} ><Text style={{fontSize: 22, color: '#444555', fontWeight: '500'}}>分享到</Text></View>
-            <Upper />
-            <Lower />
-            <View style={{marginBottom: 15}} ><Pressable  onPress={() => setShare(false)} ><Text style={style.buttonLabel} >取消</Text></Pressable></View>
-        </View>
+        <Modal
+            isVisible={share}
+            onBackdropPress={() => setShare(false)}
+            onBackButtonPress={() => setShare(false)}
+            style={{justifyContent: 'flex-end', margin: 0}}
+            backdropOpacity={0.5}
+            animationIn="slideInUp"
+            animationOut="slideOutDown"
+            useNativeDriver={true}
+            hideModalContentWhileAnimating={true}
+        >
+            <View style={{flex: 1}}>
+                <View style={[style.container, {bottom: 0}, {opacity: share ? 1 : 0}]}>
+                    <View style={style.header} ><Text style={{fontSize: 22, color: '#444555', fontWeight: '500'}}>分享到</Text></View>
+                    <Upper />
+                    <Lower />
+                    <View style={{marginBottom: 15}} ><Pressable  onPress={() => setShare(false)} ><Text style={style.buttonLabel} >取消</Text></Pressable></View>
+                </View>
+            </View>
+        </Modal>
     )
 }
-
 const style = StyleSheet.create({
     container: {
         position: 'absolute',
