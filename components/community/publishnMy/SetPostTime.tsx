@@ -19,21 +19,65 @@ export default function SetPostTime( { visible, setVisible }:SetPostTimeType ) {
             useNativeDriver={true}
             hideModalContentWhileAnimating={true}
         >
-            <View>
-                <Text>定时发布</Text>
+            <View style={style.container} >
+                <Text style={style.title} >定时发布</Text>
                 <ScrollView>
 
                 </ScrollView>
-                <View>
-                    <Pressable>
+                <View style={{
+                    width: '100%', 
+                    flexDirection: 'row',
+                    paddingVertical: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 10,
+                }} >
+                    <Pressable style={{
+                        alignItems: 'center'
+                    }}>
                         <Image source={require('@/assets/images/comment/reSet.png')} />
-                        <Text>清除</Text>
+                        <Text style={{
+                            color: '#666666',
+                            fontSize: 12,
+                        }}>清除</Text>
                     </Pressable>
-                    <Pressable>
-                        <Text>确认</Text>
+                    <Pressable style={style.button} 
+                        onPress={() => {setVisible(false)}}
+                    >
+                        <Text style={style.buttonLabel} >确认</Text>
                     </Pressable>
                 </View>
             </View>
         </Modal>
     )
 }
+
+const style = StyleSheet.create({
+    container: {
+        width: '100%',
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+    },
+    title: {
+        color: '#444555',
+        fontSize: 22,
+        fontWeight: '500',
+        paddingTop: 10,
+    },
+    button: {
+        width: '80%',
+        height: 35,
+        backgroundColor: 'rgba(255, 154, 13, 0.8)',
+        borderRadius: 18,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    buttonLabel: {
+        color: 'white',
+        fontSize: 20,
+        fontWeight: '700'
+    }
+})

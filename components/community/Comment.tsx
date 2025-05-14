@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { View, Text, StyleSheet, Image, Pressable } from "react-native"
-import { Link, router } from 'expo-router'
+import { router } from 'expo-router'
 import { useCommentStore } from "@/src/store/commentStore"
 import type { CommentType } from "@/src/types/commentType"
 import { useShare } from "@/src/context/ShareContext"

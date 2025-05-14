@@ -1,5 +1,5 @@
 import { View, Text, Image, Pressable, StyleSheet, TextInput, Switch } from "react-native"
-import { Link } from "expo-router"
+import { Link, router } from "expo-router"
 import { useState } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import PostVisible from "@/components/community/publishnMy/PostVisible"
@@ -162,7 +162,14 @@ export default function PublishMyQ() {
             </View>
 
             <LinearGradient colors={['#FAD96E', '#FFB375']}  start={[0,0]} end={[1,0]} style={style.button} >
-                <Pressable style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                <Pressable 
+                style={{
+                    width: '100%', 
+                    height: '100%', 
+                    alignItems: 'center', 
+                    justifyContent: 'center'}}
+                onPress={() => router.push('/community')}    
+                >
                     <Text style={style.buttonLabel} >发布</Text>
                 </Pressable>
             </LinearGradient>
