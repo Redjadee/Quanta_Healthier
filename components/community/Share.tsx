@@ -1,4 +1,3 @@
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs"
 import { View, Text, StyleSheet, Pressable, Image } from "react-native"
 import { useShare } from "@/src/context/ShareContext"
 import Modal from 'react-native-modal'
@@ -81,13 +80,16 @@ export default function Share() {
         </Modal>
     )
 }
+
 const style = StyleSheet.create({
     container: {
         position: 'absolute',
         elevation: 20,
         backgroundColor: 'white',
         width: '100%',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderTopRightRadius: 25,
+        borderTopLeftRadius: 25,
     },
     header: {
         paddingVertical: 10,
