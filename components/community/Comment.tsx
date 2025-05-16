@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { View, Text, StyleSheet, Image, Pressable } from "react-native"
 import { router } from 'expo-router'
 import { useCommentStore } from "@/src/store/commentStore"
 import type { CommentType } from "@/src/types/commentType"
 import { useShare } from "@/src/context/ShareContext"
+import { userProfileStore } from "@/src/store/userProfileStore"
+import type { userProfileType } from "@/src/types/userProfile"
 
 function Tags( { tags }: CommentType ) {
     if (!tags) return
@@ -38,48 +40,55 @@ const tagsStyle = StyleSheet.create({
 })
 
 interface LCSEventType {
-    HandleRouter:() => void
+    HandleCommentRouter:() => void
     setShare: React.Dispatch<React.SetStateAction<boolean>>
+    liked: boolean
 }
 
-function LikeCommentShare({ like, comment, share, HandleRouter, setShare }: CommentType & LCSEventType) {
-    const [iLike, setILike] = useState(false)
+function LikeCommentShare({ like, comment, share, HandleCommentRouter, setShare, liked }: CommentType & LCSEventType) {
+    const [iLike, setILike] = useState(false);
 
-    let LCSArrR: number[] = [like, comment, share]
-    
-    let likeIcon = useMemo(() => {
-        return iLike? require('@/assets/images/comment/liked.png') : require('@/assets/images/comment/like.png')
-    },[iLike])
+    // ✅ 安全初始化
+    useEffect(() => {
+        if (liked) setILike(true);
+    }, [liked]);
 
-    let LCSArrL = [likeIcon, require('@/assets/images/comment/comment.png'), require('@/assets/images/comment/share.png')]
-    
+    // ✅ 缓存图标数组
+    const LCSArrL = useMemo(() => [
+        iLike ? require('@/assets/images/comment/liked.png') : require('@/assets/images/comment/like.png'),
+        require('@/assets/images/comment/comment.png'),
+        require('@/assets/images/comment/share.png')
+    ], [iLike]);
+
+    // ✅ 安全更新状态
     const LCSEvent = (index: number) => {
         switch (index) {
-            case 0: {
-                setILike(!iLike)
-            };break;
-            case 1: {
-                HandleRouter()
-            };break;
-            case 2:{
-                setShare(true)
-            }break;
+            case 0: setILike(prev => !prev); break;
+            case 1: HandleCommentRouter(); break;
+            case 2: setShare(true); break;
         }
-    }
-    
-    let re = LCSArrL.map((item, index) => (
-        <Pressable onPress={() => LCSEvent(index)}  key={`LCS${index}`} style={[LCSSTyle.style, index+1 === 2 && LCSSTyle.style2, index+1 === 3 && LCSSTyle.style3]} >
-            <Image source={item}></Image>
-            <Text style={LCSSTyle.number} >{LCSArrR[index]}</Text>
-        </Pressable>
-    ))
+    };
 
     return (
         <View style={LCSSTyle.container}>
-        {re}
+            {LCSArrL.map((item, index) => (
+                <Pressable 
+                    onPress={() => LCSEvent(index)} 
+                    key={`LCS${index}`} 
+                    style={[
+                        LCSSTyle.style, 
+                        index === 1 && LCSSTyle.style2, 
+                        index === 2 && LCSSTyle.style3
+                    ]}
+                >
+                    <Image source={item} />
+                    <Text style={LCSSTyle.number}>{[like, comment, share][index]}</Text>
+                </Pressable>
+            ))}
         </View>
-    )
+    );
 }
+
 
 const LCSSTyle = StyleSheet.create({
     container: {
@@ -123,34 +132,69 @@ const uploadImgStyle = StyleSheet.create({
     }  
 })
 
-
-
-//问答的组块
-export default function Comment( data :CommentType ) {
-    const { setCurrentComment } = useCommentStore()
-    const { setShare } = useShare()
-
-    const HandleRouter = () => {
-        setCurrentComment(data)
-        router.push({ pathname: "/comment/[id]", params: { id: String(data.id) } })
+function Header( data: CommentType ) {
+    const { setCurrentUser } = userProfileStore()
+    const HandleUserRouter = () => {
+        setCurrentUser(data)
+        router.push({ pathname: '/userProfile/[id]', params: {id: String(data.id)} })
     }
 
     const postProfile = data.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
 
     return (
-        <Pressable style={style.container} onPress={HandleRouter} >
-            <View style={style.header} >
+        <Pressable style={style.header} onPress={HandleUserRouter}>
                 <Image source={postProfile} />
                 <View style={style.headerBox} >
                     <Text style={style.username} >{data.username}</Text>
                     <Text style={style.postTime} >{data.postTime}</Text>
                 </View>
-            </View>
+        </Pressable>
+    )
+}
 
+//问答的组块
+export default function Comment( { data, headerhide = false, isUserProfile = false, liked = false }: { data: CommentType; headerhide?: boolean, isUserProfile?: boolean, liked?: boolean } ) {
+    const { setCurrentComment } = useCommentStore()
+    const { setShare } = useShare()
+
+    const HandleCommentRouter = () => {
+        setCurrentComment(data)
+        router.push({ pathname: "/comment/[id]", params: { id: String(data.id) } })
+    }
+
+    const shadowStyle = {
+        shadowColor: '#FC9E19',
+        shadowOffset: {
+            width: 0,                // 水平偏移
+            height: -5,               // 垂直偏移
+        },
+        shadowOpacity: 0.1,       // 透明度 (0~1)
+        shadowRadius: 10,        // 模糊半径
+        elevation: 3,
+        
+        backgroundColor: 'rgba(251, 247, 241, 0.5)',
+        paddingTop: 25,
+    }
+    const fakeShadowStyle = {
+        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+        paddingTop: 15,
+        
+        borderTopColor: 'rgba(230, 229, 227, 0.3)',
+        borderTopWidth: 3,
+        borderBottomColor: 'rgba(230, 229, 227, 0.3)',
+        borderBottomWidth: 3
+    }
+
+    return (
+        <Pressable style={[style.container,
+            isUserProfile? fakeShadowStyle : shadowStyle
+        ]} 
+            onPress={HandleCommentRouter} >
+            {headerhide || <Header {...data} />}
             <Text style={style.postContent} >{data.postContent}</Text>
             <UploadedImg {...data} />
             <Tags {...data} />
-            <LikeCommentShare {...{ ...data, HandleRouter, setShare }} />
+            <LikeCommentShare {...{ ...data, HandleCommentRouter, setShare, liked }} />
         </Pressable>
     )
 }
@@ -158,25 +202,14 @@ export default function Comment( data :CommentType ) {
 const style = StyleSheet.create({
     container: {
         width: '100%',
-        backgroundColor: 'rgba(251, 247, 241, 0.5)',
         padding: 20,
         paddingLeft: 30,
-        paddingTop: 25,
         paddingBottom: 15,
-
-        shadowColor: '#FC9E19',
-        shadowOffset: {
-            width: 0,                // 水平偏移
-            height: 2,               // 垂直偏移
-
-        },
-        shadowOpacity: 0.1,       // 透明度 (0~1)
-        shadowRadius: 10,        // 模糊半径
-        elevation: 3
     },
     header: {
         flexDirection: 'row',
-        marginBottom: 5
+        marginBottom: 5,
+        width: '50%'
     },
     profile: {
         height: 38,

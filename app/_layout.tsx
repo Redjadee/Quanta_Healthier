@@ -12,7 +12,8 @@ export default function RootLayout() {
       <Stack.Screen name='home/choseYnM' options={{ headerShown: false }}></Stack.Screen>
       <Stack.Screen name="comment/publishMyQ" options={{ headerShown: false }}></Stack.Screen>
       <Stack.Screen name="comment/[id]" options={{ headerShown: false }}></Stack.Screen>
-      <Stack.Screen name="tags/[label]" ></Stack.Screen>
+      {/* <Stack.Screen name="tags/[label]" options={{ headerShown: false }}></Stack.Screen> */}
+      <Stack.Screen name="userProfile/[id]" options={{ headerShown: false }}></Stack.Screen>
     </Stack>
     </DateProvider>
     </ShareProvider>

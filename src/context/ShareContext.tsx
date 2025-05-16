@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useMemo } from "react"
 
+//分享框的全局状态控制
+
 interface ShareContextType {
     share: boolean
     setShare: React.Dispatch<React.SetStateAction<boolean>>

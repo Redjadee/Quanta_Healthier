@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, Pressable, TextInput, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native"
 import { useState, useMemo, useRef, useEffect, useCallback } from "react"
-import { Link, useLocalSearchParams } from "expo-router"
+import { Link, useLocalSearchParams, router } from "expo-router"
 import { LinearGradient } from "expo-linear-gradient"
 import type { CommentType, commentCommentType } from "@/src/types/commentType"
 import { useCommentStore } from "@/src/store/commentStore"
@@ -54,7 +54,7 @@ const tagsStyle = StyleSheet.create({
 interface handleResponseType {
     handleResponse: (username: string) => void
 }
-function Comment( { username, profile, postContent, postTime, postIp, like, handleResponse }: commentCommentType & handleResponseType) {
+function Comment( { username, profile, postContent, postTime, postIp, like, id, handleResponse }: commentCommentType & handleResponseType) {
     const [iLike, setILike] = useState(false)
 
     const postProfile = profile? { uri: profile } : require('@/assets/images/comment/defaultImg.png')
@@ -65,9 +65,21 @@ function Comment( { username, profile, postContent, postTime, postIp, like, hand
 
     return (
         <View style={{ flexDirection: 'row', marginBottom: 15}} >
+            <Pressable style={{
+                height: 30
+            }}
+            onPress={() => router.push({ pathname: "/userProfile/[id]", params: { id: String(id) } })}
+            >
             <Image source={postProfile} style={{height: 30, width: 30, marginRight: 8}} ></Image>
+            </Pressable>
             <View style={{gap: 5}}>
-                <Text style={{color: '#666666', fontSize: 16}} >{username}</Text>
+                <Pressable style={{
+                    width: 130
+                }}
+                onPress={() => router.push({ pathname: "/userProfile/[id]", params: { id: String(id) } })}
+                >
+                    <Text style={{color: '#666666', fontSize: 16}} >{username}</Text>
+                </Pressable>
                 <View style={{ flexDirection: 'row', gap: 15, alignItems: 'center' }} >
                     <Text style={{color: '#666666', fontSize: 16}}>{postContent}</Text>
                     <Pressable onPress={() => {handleResponse(username)}}><Text style={{color: '#777777', fontSize: 12}} >回复</Text></Pressable>
@@ -85,12 +97,10 @@ function Comment( { username, profile, postContent, postTime, postIp, like, hand
     )
 }
 
-
 ////////////////////////////
 interface postCommentType {
     postComment: () => void
 }
-
 
 function LikeCommentShare({ like, comment, share, postComment}: CommentType & postCommentType) {
     const [iLike, setILike] = useState(false)
@@ -151,14 +161,12 @@ const LCSSTyle = StyleSheet.create({
 
 
 export default function CommentDetail() {
-    const inputRef = useRef<TextInput>(null)
     const { id } = useLocalSearchParams<{id: string}>()
     const { cache } = useCommentStore()
-
     const data = cache[id]
-
     const postProfile = data.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
     
+    const inputRef = useRef<TextInput>(null)
     //发布评论
     const [pCVisible, setpCVisible] = useState(false)
     const postComment = () => {
@@ -199,11 +207,19 @@ export default function CommentDetail() {
         }}>
         <View style={style.container} >
             <View style={style.header} >
-                <Link href={'/community'}>
+                <Pressable onPress={() => router.back()}>
                 <Image source={require('@/assets/images/leftArrow.png')}></Image>
-                </Link>
-                <Image source={postProfile} style={headerStyle.postProfile}></Image>
-                <Text style={headerStyle.username} >{data.username}</Text>
+                </Pressable>
+                <Pressable style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 10,
+                }}
+                onPress={() => router.push({ pathname: "/userProfile/[id]", params: { id: String(id) } })}
+                >
+                    <Image source={postProfile} style={headerStyle.postProfile}></Image>
+                    <Text style={headerStyle.username} >{data.username}</Text>
+                </Pressable>
             </View>
 
             <ScrollView>

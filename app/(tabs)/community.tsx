@@ -157,10 +157,10 @@ function Question() {
       <PublishnMy />
       <HotTopic />
       <View style={questionStyle.list} >
-          <Comment {...data} />
-          <Comment {...data2} />
-          <Comment {...data3} />
-          <Comment {...data4} />
+          <Comment data={data} />
+          <Comment data={data2} />
+          <Comment data={data3} />
+          <Comment data={data4} />
       </View>
     </View>
   )
@@ -194,7 +194,6 @@ const articleStyle = StyleSheet.create({
 
 ///////////////////////////////////////
 export default function Community() {
-  const { share } = useShare()
   const [showLeft, setShowLeft] = useState(true)
   const changeshow = (index: number) => {
     if(index === 0) setShowLeft(true) 
