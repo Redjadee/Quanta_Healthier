@@ -248,14 +248,14 @@ export default function UserProfile() {
     const { id } = useLocalSearchParams<{id: string}>()
     const { cache } = userProfileStore()
     const data = cache[id]
-    const postProfile = data.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
+    const postProfile = data?.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
 
     return (
         
         <View style={style.container} >
             <View style={{flex: 3, width: '100%', height: '100%'}}>
                 <Image
-                source={require('@/assets/images/wife.png')}
+                source={require('@/assets/images/userProfile/defaultBg.png')}
                 style={{
                     position: 'absolute', 
                     height: '100%',

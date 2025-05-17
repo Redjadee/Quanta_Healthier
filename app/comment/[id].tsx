@@ -5,6 +5,8 @@ import { LinearGradient } from "expo-linear-gradient"
 import type { CommentType, commentCommentType } from "@/src/types/commentType"
 import { useCommentStore } from "@/src/store/commentStore"
 import { useShare } from "@/src/context/ShareContext"
+import { userProfileStore } from "@/src/store/userProfileStore"
+import { userProfileType } from "@/src/types/userProfile"
 ////////////////////////////
 function UploadedImg({ uploadImage }: CommentType) {
     //获取数组
@@ -63,12 +65,19 @@ function Comment( { username, profile, postContent, postTime, postIp, like, id, 
         return iLike? require('@/assets/images/comment/liked.png') : require('@/assets/images/comment/like.png')
     },[iLike])
 
+    const userData: userProfileType = { id, username, profile}
+    const { setCurrentUser } = userProfileStore()
+    const HandleUserRouter = () => {
+        setCurrentUser(userData)
+        router.push({ pathname: '/userProfile/[id]', params: {id: String(userData.id)} })
+    }
+
     return (
         <View style={{ flexDirection: 'row', marginBottom: 15}} >
             <Pressable style={{
                 height: 30
             }}
-            onPress={() => router.push({ pathname: "/userProfile/[id]", params: { id: String(id) } })}
+            onPress={HandleUserRouter}
             >
             <Image source={postProfile} style={{height: 30, width: 30, marginRight: 8}} ></Image>
             </Pressable>
@@ -76,7 +85,7 @@ function Comment( { username, profile, postContent, postTime, postIp, like, id, 
                 <Pressable style={{
                     width: 130
                 }}
-                onPress={() => router.push({ pathname: "/userProfile/[id]", params: { id: String(id) } })}
+                onPress={HandleUserRouter}
                 >
                     <Text style={{color: '#666666', fontSize: 16}} >{username}</Text>
                 </Pressable>
@@ -198,6 +207,13 @@ export default function CommentDetail() {
         ))
     },[data.commentComment])
 
+    const userData: userProfileType = { id: data.id, username: data.username, profile: data.profile }
+    const { setCurrentUser } = userProfileStore()
+    const HandleUserRouter = () => {
+        setCurrentUser(userData)
+        router.push({ pathname: '/userProfile/[id]', params: {id: String(userData.id)} })
+    }
+    
     return (
     <TouchableWithoutFeedback 
         onPress={() => {
@@ -215,7 +231,7 @@ export default function CommentDetail() {
                     alignItems: 'center',
                     gap: 10,
                 }}
-                onPress={() => router.push({ pathname: "/userProfile/[id]", params: { id: String(id) } })}
+                onPress={HandleUserRouter}
                 >
                     <Image source={postProfile} style={headerStyle.postProfile}></Image>
                     <Text style={headerStyle.username} >{data.username}</Text>

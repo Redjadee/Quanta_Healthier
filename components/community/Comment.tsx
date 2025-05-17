@@ -5,7 +5,6 @@ import { useCommentStore } from "@/src/store/commentStore"
 import type { CommentType } from "@/src/types/commentType"
 import { useShare } from "@/src/context/ShareContext"
 import { userProfileStore } from "@/src/store/userProfileStore"
-import type { userProfileType } from "@/src/types/userProfile"
 
 function Tags( { tags }: CommentType ) {
     if (!tags) return
@@ -139,11 +138,11 @@ function Header( data: CommentType ) {
         router.push({ pathname: '/userProfile/[id]', params: {id: String(data.id)} })
     }
 
-    const postProfile = data.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
+    const postProfile = data?.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
 
     return (
         <Pressable style={style.header} onPress={HandleUserRouter}>
-                <Image source={postProfile} />
+                <Image source={postProfile} style={{width: 38, height: 38}}/>
                 <View style={style.headerBox} >
                     <Text style={style.username} >{data.username}</Text>
                     <Text style={style.postTime} >{data.postTime}</Text>

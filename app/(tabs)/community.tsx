@@ -80,8 +80,6 @@ function Question() {
     commentCommentComment: []
   }
 
-
-
   let data: CommentType = {
     id: '00123',
     username: '今晚一定睡',
@@ -149,7 +147,6 @@ function Question() {
 
     commentComment: []
   };
-
   //
 
   return (
@@ -157,10 +154,10 @@ function Question() {
       <PublishnMy />
       <HotTopic />
       <View style={questionStyle.list} >
-          <Comment data={data} />
-          <Comment data={data2} />
-          <Comment data={data3} />
-          <Comment data={data4} />
+        <Comment data={data} />
+        <Comment data={data2} />
+        <Comment data={data3} />
+        <Comment data={data4} />
       </View>
     </View>
   )

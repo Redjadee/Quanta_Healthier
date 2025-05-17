@@ -97,7 +97,7 @@ export default function Article() {
     return (
         <View style={style.container} >
             <View style={style.header} >
-                <Image source={postProfile} />
+                <Image source={postProfile} style={{width: 38, height: 38}} />
                 <Text style={style.username} >{username}</Text>
             </View>
 
