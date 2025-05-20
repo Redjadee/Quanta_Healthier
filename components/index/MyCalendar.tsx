@@ -1,7 +1,5 @@
-import { useState } from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Calendar, CalendarList, LocaleConfig } from 'react-native-calendars'
-
+import { Calendar, LocaleConfig } from 'react-native-calendars'
 
 type calendar = {
   now: string
@@ -19,17 +17,60 @@ LocaleConfig.locales['zh'] = {
 };
 LocaleConfig.defaultLocale = 'zh';
 
-const colorArr: String[] = ['#FDB44B', '#FEE8C9', '#DADADA']
+const colorArr = ['#FDB44B', '#FEE8C9', '#DADADA']
+const textColorArr = ['white', '#FFA018']
 
+const handleMarked = () => {
+//写逻辑
+//如果周六，无论如何都是结束日，如果周日，无论如何都是开始日
+}
 
-    return  (
-        <View style={style.container} >
-            <Calendar 
-                style={style.calen}
+  return  (
+    <View style={style.container} >
+      <Calendar 
+      style={style.calen}
     // 基础配置
     //
       current={now}
+      firstDay={0}
       
+
+      markingType={'period'}
+      // 标记今天
+      markedDates={{
+        [new Date().toISOString().split('T')[0]]: {
+        startingDay: true,
+        endingDay: true,
+        textColor: textColorArr[0],
+        color: colorArr[2]
+        },
+        '2025-05-01': {
+          startingDay: true,
+          textColor: textColorArr[0],
+          color: colorArr[0]
+        },
+        '2025-05-02': {
+          endingDay: true,
+          textColor: textColorArr[0],
+          color: colorArr[0]
+        },
+        '2025-05-04': {
+          startingDay: true,
+          textColor: textColorArr[1],
+          color: colorArr[1]
+        },
+        '2025-05-05': {
+          textColor: textColorArr[1],
+          color: colorArr[1]
+        },
+        '2025-05-06': {
+          endingDay: true,
+          textColor: textColorArr[1],
+          color: colorArr[1]
+        },
+      }}
+
+
       // 样式配置
       theme={{
         //日历背景色
@@ -50,7 +91,7 @@ const colorArr: String[] = ['#FDB44B', '#FEE8C9', '#DADADA']
             justifyContent: 'center',  
             alignItems: 'center',    
             height: 32,              
-            width: 32,               
+            width: 32,           
           }
         },
         //去除头部
@@ -64,25 +105,19 @@ const colorArr: String[] = ['#FDB44B', '#FEE8C9', '#DADADA']
               height: 0
             }
           },
+         
       }}
+      
       //去除多余功能
       hideExtraDays={true} //非本月不显示
       disableAllTouchEventsForDisabledDays={true}
       enableSwipeMonths={false}
       disableMonthChange={true}
-      // 功能配置
-      // onDayPress={(day) => console.log('选中日期:', day)}
-      // onMonthChange={(month) => console.log('切换月份:', month)}
-      // 标记今天
-      markedDates={{
-          [new Date().toISOString().split('T')[0]]: {
-          selected: true,
-          marked: false,
-          // dotColor: colorArr[2]
-          }
-        }}
+      hideArrows={true}          // 隐藏左右箭头
+      hideDayNames={false}       // 显示星期几的名称
+      pagingEnabled={false}      // 禁用分页滑动
         />
-        </View>
+      </View>
     )
 }
 
@@ -92,7 +127,7 @@ const style = StyleSheet.create({
     },
     calen: {
         width: 350,
-        borderRadius: 10
+        borderRadius: 10,
     }
 })
 

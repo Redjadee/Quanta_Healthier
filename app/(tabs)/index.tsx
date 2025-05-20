@@ -1,9 +1,31 @@
-import { Text, View, StyleSheet, Image } from "react-native";
-import { Link } from "expo-router"
+import { Text, View, StyleSheet, Image, ScrollView, Pressable } from "react-native";
+import { Link, router } from "expo-router"
 import  MyCalendar  from "@/components/index/MyCalendar"
-
 import { useDate } from "@/src/context/DateContext"
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react"
+
+function Trouble() {
+  const trouble = [require('@/assets/images/index/index1.png'), require('@/assets/images/index/index2.png'), require('@/assets/images/index/index3.png')]
+  const handleRouter = (index: number) => {
+    switch(index) {
+      case 0: router.push('/home/shuiMian'); break;
+      case 1: router.push('/home/changDao'); break;
+      case 2: break;
+    }
+  }
+  return (
+    <View style={{
+      paddingTop: 20,
+      gap: 15
+    }}>
+      {trouble.map((value, index) => (
+        <Pressable key={`index${index}`} onPress={() => handleRouter(index)}>
+          <Image source={value} style={{height: 120, width: '100%'}} />
+        </Pressable>
+      ))}
+    </View>
+  )
+}
 
 export default function Index() {
   const { setedMon, setedYear } = useDate()
@@ -30,8 +52,10 @@ export default function Index() {
         </View>
       
       </View>
-      <MyCalendar now={calNow} />
-      <View style={style.statusbar}><Text>占位！！</Text></View>
+      <ScrollView style={{top: 20}}>
+        <MyCalendar now={calNow} />
+         <Trouble />
+      </ScrollView>
       </View>
   );
 }
@@ -48,7 +72,7 @@ const style = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: '25%'
+    gap: '25%',
   },
   headerText: {
     fontSize: 20,
@@ -68,9 +92,4 @@ const style = StyleSheet.create({
     color: '#908C86',
     fontSize: 13
   },
-
-  statusbar: {
-    paddingTop: 20,
-    flex: 6
-  }
 })

@@ -14,6 +14,8 @@ export default function RootLayout() {
       <Stack.Screen name="comment/[id]" options={{ headerShown: false }}></Stack.Screen>
       {/* <Stack.Screen name="tags/[label]" options={{ headerShown: false }}></Stack.Screen> */}
       <Stack.Screen name="userProfile/[id]" options={{ headerShown: false }}></Stack.Screen>
+      <Stack.Screen name="home/changDao" options={{ headerShown: false }}></Stack.Screen>
+      <Stack.Screen name="home/shuiMian" options={{ headerShown: false }}></Stack.Screen>
     </Stack>
     </DateProvider>
     </ShareProvider>
