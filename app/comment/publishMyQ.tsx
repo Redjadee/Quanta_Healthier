@@ -1,9 +1,10 @@
-import { View, Text, Image, Pressable, StyleSheet, TextInput, Switch } from "react-native"
+import { View, Text, Image, Pressable, StyleSheet, TextInput } from "react-native"
 import { Link, router } from "expo-router"
 import { useState } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import PostVisible from "@/components/community/publishnMy/PostVisible"
 import SetPostTime from "@/components/community/publishnMy/SetPostTime"
+import { Switch } from "react-native-ui-lib"
 
 function AddTag() {
     const [isFocused, setFocus] = useState(false)
@@ -95,23 +96,25 @@ function SwitchDouble() {
            <Switch
                 value={enabled1}
                 onValueChange={() => setEnabled1(!enabled1)}
-                trackColor={{ false: 'rgba(153, 153, 153, 0.4)', true: 'rgba(255, 167, 84, 1)' }}
-                thumbColor={'white'}
+                onColor='rgba(255, 167, 84, 1)'
+                offColor='rgba(153, 153, 153, 0.4)'
+                thumbColor='white'
                 style={{
                     position: 'absolute',
-                    right: 20,
-                    transform: [{scale: 1.2}]
+                    right: 25,
+                    transform: [{scale: 1.1}]
                 }}
             ></Switch> : 
             <Switch
                 value={enabled2}
                 onValueChange={() => setEnabled2(!enabled2)}
-                trackColor={{ false: 'rgba(153, 153, 153, 0.4)', true: 'rgba(255, 167, 84, 1)' }}
-                thumbColor={'white'}
+                onColor='rgba(255, 167, 84, 1)'
+                offColor='rgba(153, 153, 153, 0.4)'
+                thumbColor='white'
                 style={{
                     position: 'absolute',
-                    right: 20,
-                    transform: [{scale: 1.2}]
+                    right: 25,
+                    transform: [{scale: 1.1}]
                 }}
             ></Switch>}
         </View>
