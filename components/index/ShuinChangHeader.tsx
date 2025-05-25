@@ -148,6 +148,7 @@ export default function ShuinChangHeader({index }: {index: number }) {
                 moment().startOf('week').add(1, 'days'),
                 moment().startOf('week').add(2, 'days'),
                 moment().startOf('week').add(3, 'days'),
+                moment().startOf('week').add(4, 'days'),
             ]}
             />
         </View>

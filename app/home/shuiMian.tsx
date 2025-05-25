@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, Image, Pressable, ScrollView } from "react-native";
 import ShuinChangHeader from "@/components/index/ShuinChangHeader"
-import React, { useCallback, useState, useRef, useMemo } from "react";
+import React, { useCallback, useState, useRef } from "react";
 import moment from "moment";
 import { Switch } from "react-native-ui-lib";
 
@@ -14,7 +14,6 @@ function TimePicker({ getTime }: TimePickerType) {
   const hourScrollRef = useRef<ScrollView>(null);
   const minuteScrollRef = useRef<ScrollView>(null);
 
-  const GetTime = useCallback(() => getTime(hour, minute), [hour, minute])
   // 生成数据（包含前后缓冲项实现伪循环）
   const hours = [...Array(72)].map((_, i) => `${i % 24}`.padStart(2, '0'));
   const minutes = [...Array(180)].map((_, i) => `${i % 60}`.padStart(2, '0'));

@@ -251,7 +251,6 @@ export default function UserProfile() {
     const postProfile = data?.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
 
     return (
-        
         <View style={style.container} >
             <View style={{flex: 3, width: '100%', height: '100%'}}>
                 <Image
