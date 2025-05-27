@@ -152,7 +152,7 @@ function Header( data: CommentType ) {
 }
 
 //问答的组块
-export default function Comment( { data, headerhide = false, isUserProfile = false, liked = false }: { data: CommentType; headerhide?: boolean, isUserProfile?: boolean, liked?: boolean } ) {
+export default function Comment( { data, headerhide = false, fakeShadow = false, liked = false, isTrailPage=false }: { data: CommentType; headerhide?: boolean, fakeShadow?: boolean, liked?: boolean, isTrailPage?: boolean } ) {
     const { setCurrentComment } = useCommentStore()
     const { setShare } = useShare()
 
@@ -186,7 +186,8 @@ export default function Comment( { data, headerhide = false, isUserProfile = fal
 
     return (
         <Pressable style={[style.container,
-            isUserProfile? fakeShadowStyle : shadowStyle
+            fakeShadow? fakeShadowStyle : shadowStyle,
+            isTrailPage && trailStyle.container
         ]} 
             onPress={HandleCommentRouter} >
             {headerhide || <Header {...data} />}
@@ -232,5 +233,11 @@ const style = StyleSheet.create({
         color: '#555555',
         fontSize: 18,
         marginBottom: 8,
+    }
+})
+
+const trailStyle = StyleSheet.create({
+    container: {
+        backgroundColor: 'white',
     }
 })

@@ -136,17 +136,21 @@ function LikeCommentShare({ like, comment, share, postComment}: CommentType & po
             }break;
         }
     }
-    
-    let re = LCSArrL.map((item, index) => (
-        <Pressable onPress={() => {LCSEvent(index)}}  key={`LCS${index}`} style={[LCSSTyle.style]} >
-            <Image source={item}></Image>
-            <Text style={LCSSTyle.number} >{LCSArrR[index]}</Text>
-        </Pressable>
-    ))
 
     return (
         <View style={LCSSTyle.container}>
-        {re}
+        {LCSArrL.map((item, index) => (
+        <Pressable 
+        onPress={() => {LCSEvent(index)}}  
+        key={`LCS${index}`} 
+        style={[LCSSTyle.item, 
+            index === 1 && {left: 60,}, 
+            index === 2 && {left: 120}]} 
+        >    
+            <Image source={item}></Image>
+            <Text style={LCSSTyle.number} >{LCSArrR[index]}</Text>
+        </Pressable>
+        ))}
         </View>
     )
 }
@@ -155,12 +159,12 @@ const LCSSTyle = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 10
     },
-    style: {
+    item: {
         flexDirection: 'row',
         gap: 4,
-        alignItems: 'center'
+        alignItems: 'center',
+        position: 'absolute'
     },
     number: {
         color: '#666666'
