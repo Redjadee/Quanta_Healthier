@@ -40,7 +40,7 @@ function Item({ likeType }: { likeType: '评论' | '提问' | '文章' }  ) {
     }
 
     return (
-        <View style={ItemStyle.container}>
+        <Pressable style={ItemStyle.container}>
             <Image source={postProfile} style={ItemStyle.profile} />
             <View>
                 <Text style={ItemStyle.username}>{likedPerson.username}</Text>
@@ -61,7 +61,7 @@ function Item({ likeType }: { likeType: '评论' | '提问' | '文章' }  ) {
                 </View>
             </View>
             {postContent.uploadImage && <Image style={ItemStyle.uploadImg} source={postContent.uploadImage} />}
-        </View>
+        </Pressable>
     )
 }
 

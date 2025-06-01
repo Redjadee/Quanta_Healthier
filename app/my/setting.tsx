@@ -1,13 +1,25 @@
 import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import MyHeader from "@/components/my/MyHeader"
+import { router } from "expo-router"
 
 function Upper() {
-    const label=['账号与安全', '个人资料', '个人资料', '通用设置', '通知设置']
+    const label=['账号与安全', '个人资料', '隐私设置', '通用设置', '通知设置']
     const arrow = require('@/assets/images/My/arrow.png')
+    
+    const events = (index: number) => {
+        switch (index) {
+            case 1: router.push('/my/setting/selfProfile'); break;
+        }
+    }
+    
     return (
         <View style={style.container}>
             {label.map((value, index) => (
-                <Pressable style={[style.item, index !== 4 && style.border]} key={`settingUpper${index}`}>
+                <Pressable 
+                style={[style.item, index !== 4 && style.border]} 
+                key={`settingUpper${index}`}
+                onPress={() => events(index)}
+                >
                     <Text style={style.label}>{value}</Text>
                     <Pressable style={style.arrow}>
                         <Image source={arrow} />

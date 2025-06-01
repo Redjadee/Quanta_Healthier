@@ -24,6 +24,7 @@ export default function RootLayout() {
       <Stack.Screen name="my/answer" options={{ headerShown: false }}></Stack.Screen>
       <Stack.Screen name="my/collection" options={{ headerShown: false }}></Stack.Screen>
       <Stack.Screen name="my/setting" options={{ headerShown: false }}></Stack.Screen>
+      <Stack.Screen name="my/setting/selfProfile" options={{ headerShown: false }}></Stack.Screen>
     </Stack>
     </DateProvider>
     </ShareProvider>

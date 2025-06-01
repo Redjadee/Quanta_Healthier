@@ -146,7 +146,7 @@ export default function My() {
           </View>
           
           <Pressable style={[style.quickSet, {bottom: 15, right: 20}]}
-            onPress={() => router.push('/')}
+            onPress={() => router.push('/my/setting/selfProfile')}
           >
             <Text style={style.quickSetLabel}>编辑资料</Text>
           </Pressable>

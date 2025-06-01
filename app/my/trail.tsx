@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Image, Pressable, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import MyHeader from "@/components/my/MyHeader"
 import CommunityTab from "@/components/community/CommunityTab"
 import Comment from "@/components/community/Comment"
@@ -157,8 +157,8 @@ function Question() {
 function Articles() {
   return(
     <View style={articleStyle.container} >
-        <View style={{gap: 15, width: '90%'}} >
-        <Article />
+        <View style={{gap: 15, width: '90%', marginTop: 10}} >
+        <Article proShadow={true} />
         </View>
     </View>
   )

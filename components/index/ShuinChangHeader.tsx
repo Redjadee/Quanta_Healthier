@@ -63,7 +63,7 @@ export default function ShuinChangHeader({index }: {index: number }) {
         const isEndOfMarkedRange = isMarked && 
             (!markedDates.some((d) => moment(d).isSame(displayDate.clone().add(1, 'day'), 'day')));
         return (
-            <View key={`weekCalendarItem`} style={{ alignItems: 'center', justifyContent: 'center', gap: 5}}>
+            <View style={{ alignItems: 'center', justifyContent: 'center', gap: 5}}>
                 <Text style={{
                     color: '#999999',
                     fontSize: 16,
@@ -126,7 +126,6 @@ export default function ShuinChangHeader({index }: {index: number }) {
         <View style={{backgroundColor: '#FEE8C9', justifyContent: 'center', alignItems: 'center', zIndex: 1}}>
             <Header index={index} />
             <CalendarStrip
-            key={`weekCalendar`}
             style={{ 
                 height: 90,
                 width: '90%',

@@ -58,6 +58,7 @@ interface handleResponseType {
 }
 function Comment( { username, profile, postContent, postTime, postIp, like, id, handleResponse }: commentCommentType & handleResponseType) {
     const [iLike, setILike] = useState(false)
+    const [likenum, setLikenum] = useState(like)
 
     const postProfile = profile? { uri: profile } : require('@/assets/images/comment/defaultImg.png')
 
@@ -99,8 +100,8 @@ function Comment( { username, profile, postContent, postTime, postIp, like, id, 
                 </View>
             </View>
             <View style={{position: 'absolute', right: 20, top: 25, alignItems: 'center'}}>
-                <Pressable onPress={()=>setILike(!iLike)}><Image source={likeIcon}></Image></Pressable>
-                <Text>{like}</Text>
+                <Pressable onPress={()=> {setILike(!iLike); setLikenum(!iLike ? likenum => likenum +1 : likenum => likenum -1)}}><Image source={likeIcon}></Image></Pressable>
+                <Text>{likenum}</Text>
             </View>
         </View>
     )
@@ -114,8 +115,9 @@ interface postCommentType {
 function LikeCommentShare({ like, comment, share, postComment}: CommentType & postCommentType) {
     const [iLike, setILike] = useState(false)
     const { setShare } = useShare()
+    const [likenum, setLikenum] = useState(like)
 
-    let LCSArrR: number[] = [like, comment, share]
+    let LCSArrR: number[] = [likenum, comment, share]
     
     let likeIcon = useMemo(() => {
         return iLike? require('@/assets/images/comment/liked.png') : require('@/assets/images/comment/like.png')
@@ -127,6 +129,7 @@ function LikeCommentShare({ like, comment, share, postComment}: CommentType & po
         switch (index) {
             case 0: {
                 setILike(!iLike)
+                setLikenum(!iLike ? likenum => likenum +1 : likenum => likenum -1)
             };break;
             case 1:{
                 postComment()

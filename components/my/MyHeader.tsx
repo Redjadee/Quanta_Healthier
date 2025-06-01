@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import { router } from "expo-router"
 
 export default function MyHeader({ index, noBorder=false, isMyLikePage=false }: { index: number, noBorder?: boolean, isMyLikePage?: boolean }) {
-    const label = [ '收到的赞', '收到的评论', '我的足迹', '我的喜欢', '我的提问', '我的回答', '称号收集', '设置']
+    const label = [ '收到的赞', '收到的评论', '我的足迹', '我的喜欢', '我的提问', '我的回答', '称号收集', '设置', '个人资料']
     return (
         <View style={[
             style.container, 

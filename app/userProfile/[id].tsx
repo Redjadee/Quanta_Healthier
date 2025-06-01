@@ -129,7 +129,7 @@ function Problem() {
             )
         }else {
             const problem = data.map((value, index) => (
-                <Comment data={value} headerhide={true} isUserProfile={true} key={`userProfileComment${index}`} />
+                <Comment data={value} headerhide={true} fakeShadow={true} key={`userProfileComment${index}`} />
             ))
             return (
                 <>
@@ -215,7 +215,7 @@ function Like() {
             )
         }else {
             const like = data.map((value, index) => (
-                <Comment data={value} headerhide={true} isUserProfile={true} liked={true}  key={`userProfileLike${index}`} />
+                <Comment data={value} headerhide={true} fakeShadow={true} liked={true}  key={`userProfileLike${index}`} />
             ))
             return (
                 <>

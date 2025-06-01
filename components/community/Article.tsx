@@ -1,17 +1,20 @@
 import { Text, View, StyleSheet, Image, Pressable } from 'react-native'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 
 
-function LikeCommentShare() {
+function LikeCommentShare({ liked=false }: { liked: boolean }) {
     const [iLike, setILike] = useState(false)
-
-    //获取
+    
+    useEffect(() => {
+        if ( liked ) setILike(iLike => iLike = true)
+    }, [])
+    
+        //获取
     let like: number = 111
     let comment: number = 222
     let share: number = 333
 
     let LCSArrR: number[] = [like, comment, share]
-
 
 
     
@@ -84,9 +87,12 @@ const uploadImgStyle = StyleSheet.create({
     }  
 })
 
-//问答的组块
-export default function Article() {
-    //获取！
+interface ArticleType {
+    liked?: boolean,
+    proShadow?: boolean
+}
+export default function Article( { liked=false, proShadow=false }: ArticleType ) {
+    
     const username: string = '用户名'
     const postContent: string = '孩子一直熬夜怎么办？'
     
@@ -95,7 +101,7 @@ export default function Article() {
     const postProfile = profile? { uri: profile } : require(defaultProfile)
 
     return (
-        <View style={style.container} >
+        <View style={[style.container, proShadow ? style.proBorder: style.border]} >
             <View style={style.header} >
                 <Image source={postProfile} style={{width: 38, height: 38}} />
                 <Text style={style.username} >{username}</Text>
@@ -103,7 +109,7 @@ export default function Article() {
 
             <Text style={style.postContent} >{postContent}</Text>
             <UploadedImg />
-            <LikeCommentShare />
+            <LikeCommentShare liked={liked} />
         </View>
     )
 }
@@ -117,8 +123,15 @@ const style = StyleSheet.create({
         paddingBottom: 10,
 
         borderRadius: 15,
+    },
+    border: {
         borderWidth: 2,
         borderColor: 'rgba(252, 158, 25, 0.05)',
+    },
+    proBorder: {
+        borderWidth: 2,
+        borderBottomWidth: 4,
+        borderColor: 'rgba(252, 158, 25, 0.1)',
     },
     header: {
         flexDirection: 'row',

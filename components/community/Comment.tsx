@@ -46,6 +46,7 @@ interface LCSEventType {
 
 function LikeCommentShare({ like, comment, share, HandleCommentRouter, setShare, liked }: CommentType & LCSEventType) {
     const [iLike, setILike] = useState(false);
+    const [ likenum, setLikenum ] = useState(like)
 
     // ✅ 安全初始化
     useEffect(() => {
@@ -62,7 +63,7 @@ function LikeCommentShare({ like, comment, share, HandleCommentRouter, setShare,
     // ✅ 安全更新状态
     const LCSEvent = (index: number) => {
         switch (index) {
-            case 0: setILike(prev => !prev); break;
+            case 0: {setILike(prev => !prev); setLikenum(!iLike ? likenum => likenum +1 : likenum => likenum -1)}; break;
             case 1: HandleCommentRouter(); break;
             case 2: setShare(true); break;
         }
@@ -81,7 +82,7 @@ function LikeCommentShare({ like, comment, share, HandleCommentRouter, setShare,
                     ]}
                 >
                     <Image source={item} />
-                    <Text style={LCSSTyle.number}>{[like, comment, share][index]}</Text>
+                    <Text style={LCSSTyle.number}>{[likenum, comment, share][index]}</Text>
                 </Pressable>
             ))}
         </View>

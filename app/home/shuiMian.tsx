@@ -56,7 +56,7 @@ function TimePicker({ getTime }: TimePickerType) {
         style={styles.scroll}
       >
         {hours.map((h, i) => (
-          <View key={`h-${i}`} style={styles.item}>
+          <View key={`shuimianItem${i}`} style={styles.item}>
             <Text style={[styles.itemLabel, hour === Number(h) && styles.selected]}>
             {h}
           </Text>

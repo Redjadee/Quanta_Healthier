@@ -1,13 +1,35 @@
 import { Text, View, StyleSheet, Image, Pressable, ScrollView } from "react-native";
 import MyHeader from "@/components/my/MyHeader"
+import { useMemo, useState } from "react";
 
 function LikenComment() {
-    const label = ['点赞', '回复']
-    const icon = [require('@/assets/images/My/comment/like.png'), require('@/assets/images/My/comment/comment.png')]
+    const [ liked, setLiked ] = useState(false)
+    const [ likenum, setLikenum ] = useState(0)
+    
+    const likeLabel = useMemo(() => {
+        return likenum === 0 ? '点赞' : likenum
+    }, [likenum])
+    const label = [likeLabel, '回复']
+    
+    const likeIcon = liked? require('@/assets/images/My/comment/liked.png') : require('@/assets/images/My/comment/like.png')
+    const icon = [likeIcon, require('@/assets/images/My/comment/comment.png')]
+    
+    function LCEvent(index: number) {
+        if (index === 0 ) {
+            setLikenum(!liked ? likenum => likenum +1 : likenum => likenum -1)
+            setLiked(liked => !liked)
+        } else {
+            
+        }
+    }
+    
     return (
         <View style={LCSTyle.container}>
             {label.map((value, index) => (
-                <Pressable key={`CommenttoMy${index}`} style={LCSTyle.itemBox}>
+                <Pressable 
+                key={`CommenttoMy${index}`} 
+                style={LCSTyle.itemBox}
+                onPress={() => LCEvent(index)}>
                     <Image source={icon[index]} style={LCSTyle.icon} />
                     <Text style={LCSTyle.label} >{value}</Text>
                 </Pressable>
