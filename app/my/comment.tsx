@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet, Image, Pressable, ScrollView } from "react-native";
 import MyHeader from "@/components/my/MyHeader"
-import { useMemo, useState } from "react";
+import { useMemo, useState } from "react"
+import { likeU, profileU } from "@/src/utils/commentUtils"
 
 function LikenComment() {
     const [ liked, setLiked ] = useState(false)
@@ -11,7 +12,7 @@ function LikenComment() {
     }, [likenum])
     const label = [likeLabel, '回复']
     
-    const likeIcon = liked? require('@/assets/images/My/comment/liked.png') : require('@/assets/images/My/comment/like.png')
+    const likeIcon = useMemo(() => likeU(liked), [liked])
     const icon = [likeIcon, require('@/assets/images/My/comment/comment.png')]
     
     function LCEvent(index: number) {
@@ -70,7 +71,7 @@ function Item() {
         postTime: '一天前'
     }
 
-    const postProfile = commentedPerson.profile? { uri: commentedPerson.profile } : require('@/assets/images/comment/defaultImg.png')
+    const postProfile = useMemo(() => profileU(commentedPerson.profile), [commentedPerson.profile])
     
     return (
     <View style={ItemStyle.container}>

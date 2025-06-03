@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
 
 
 function Reminder() {
-    const [ enabled, setEnabled ] = useState(true)
+    const [ enabled, setEnabled ] = useState(false)
     const [ m, setM ] = useState('00')
     const [ h, setH ] = useState('23')
     const getTime = (hour: number, minute: number) => {

@@ -1,26 +1,25 @@
 import { Text, View, StyleSheet, Image, Pressable, ScrollView } from "react-native";
 import MyHeader from "@/components/my/MyHeader"
-import { useMemo, useState } from "react";
+import { useMemo, useState } from "react"
+import { likeU, profileU } from "@/src/utils/commentUtils"
 
 interface itemType {
     postContent?: string,
     postTime?: string,
     like?: number
+    profile?: string | undefined 
 }
-function Item({ postContent, postTime, like}: itemType) {
+function Item({ postContent, postTime, like, profile}: itemType) {
     const [ liked, setLiked ] = useState(false)
     like = 12 //
     const [ likenum, setLikenum ] = useState(like)
-    const likeIcon = useMemo(() => {
-        return liked ? require("@/assets/images/comment/liked.png") : require("@/assets/images/comment/like.png") 
-    }, [liked])
+    const likeIcon = useMemo(() => likeU(liked), [liked])
     
     const Myusername = '今晚一定不熬夜'
-    const Myprofile = require('@/assets/images/comment/defaultImg.png')
+    const Myprofile = useMemo(() => profileU(profile), [profile])
 
     postContent = '我真的好爱写APP'
     postTime = '刚刚'
-
 
     return (
         <Pressable style={ItemStyle.container}>

@@ -4,6 +4,7 @@ import { userProfileStore } from "@/src/store/userProfileStore"
 import Comment from "@/components/community/Comment"
 import { useMemo, useState, useEffect } from "react"
 import { CommentType } from "@/src/types/commentType"
+import { profileU } from "@/src/utils/commentUtils"
 
 interface NavigatorType {
     handleShow: (bool: boolean) => void;
@@ -248,7 +249,7 @@ export default function UserProfile() {
     const { id } = useLocalSearchParams<{id: string}>()
     const { cache } = userProfileStore()
     const data = cache[id]
-    const postProfile = data?.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
+    const postProfile = useMemo(() => profileU(data.profile), [data.profile])
 
     return (
         <View style={style.container} >

@@ -1,5 +1,7 @@
 import { Text, View, StyleSheet, Image, Pressable, ScrollView } from "react-native";
 import MyHeader from "@/components/my/MyHeader"
+import { profileU } from "@/src/utils/commentUtils"
+import { useMemo } from "react";
 
 function Item({ likeType }: { likeType: '评论' | '提问' | '文章' }  ) {
     const likedPerson = {
@@ -11,7 +13,7 @@ function Item({ likeType }: { likeType: '评论' | '提问' | '文章' }  ) {
         postTime: '30分钟前',
         uploadImage: require('@/assets/images/wife.png'),
     }
-    const postProfile = likedPerson.profile? { uri: likedPerson.profile } : require('@/assets/images/comment/defaultImg.png')
+    const postProfile = useMemo(() => profileU(likedPerson.profile), [likedPerson.profile])
     
     const choseLikeType = () => {
         switch (likeType) {

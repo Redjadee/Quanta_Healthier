@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, Image, Pressable, ViewStyle, ScrollView } from "react-native";
 import MyHeader from "@/components/my/MyHeader"
-import { useCallback } from "react";
+import { useCallback } from "react"
 import { StyleProp } from "react-native"
 
 function Item() {
@@ -27,7 +27,7 @@ function Item() {
     )
 }
 
-function Icons() {
+function Icons() { 
     const seen = 122
     const like = 12
     const comment = 23

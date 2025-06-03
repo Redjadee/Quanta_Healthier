@@ -5,6 +5,7 @@ import { useCommentStore } from "@/src/store/commentStore"
 import type { CommentType } from "@/src/types/commentType"
 import { useShare } from "@/src/context/ShareContext"
 import { userProfileStore } from "@/src/store/userProfileStore"
+import { likeU, profileU } from "@/src/utils/commentUtils"
 
 function Tags( { tags }: CommentType ) {
     if (!tags) return
@@ -55,7 +56,7 @@ function LikeCommentShare({ like, comment, share, HandleCommentRouter, setShare,
 
     // ✅ 缓存图标数组
     const LCSArrL = useMemo(() => [
-        iLike ? require('@/assets/images/comment/liked.png') : require('@/assets/images/comment/like.png'),
+        likeU(iLike),
         require('@/assets/images/comment/comment.png'),
         require('@/assets/images/comment/share.png')
     ], [iLike]);
@@ -114,8 +115,6 @@ const LCSSTyle = StyleSheet.create({
 })
 
 function UploadedImg({ uploadImage }: CommentType) {
-    //获取string数组，做成可左右滑动的样式
-
     return (
         <>
             {/* {uploadImage ?  : <></>} */}
@@ -139,7 +138,7 @@ function Header( data: CommentType ) {
         router.push({ pathname: '/userProfile/[id]', params: {id: String(data.id)} })
     }
 
-    const postProfile = data?.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
+    const postProfile = useMemo(() => profileU(data.profile), [data.profile])
 
     return (
         <Pressable style={style.header} onPress={HandleUserRouter}>

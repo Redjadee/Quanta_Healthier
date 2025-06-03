@@ -7,11 +7,9 @@ import { useCommentStore } from "@/src/store/commentStore"
 import { useShare } from "@/src/context/ShareContext"
 import { userProfileStore } from "@/src/store/userProfileStore"
 import { userProfileType } from "@/src/types/userProfile"
+import { likeU, profileU } from "@/src/utils/commentUtils"
 ////////////////////////////
-function UploadedImg({ uploadImage }: CommentType) {
-    //获取数组
-    
-    
+function UploadedImg({ uploadImage }: CommentType) {  
     return (
         <>
             {/* { ? <Image source={{ uri: }} ></Image> : <></>} */}
@@ -29,14 +27,13 @@ const uploadImgStyle = StyleSheet.create({
 ////////////////////////////
 function Tags({ tags }: CommentType) {
     if ( !tags ) return
-    const re = tags && tags.map((item, index) => (
-        <Pressable key={`Tags${index}`}>
-            <Text style={tagsStyle.tag} >{`#${item}`}</Text>
-        </Pressable>
-    ))
     return (
         <View style={tagsStyle.container} >
-            {re}
+        {tags && tags.map((item, index) => (
+            <Pressable key={`Tags${index}`}>
+                <Text style={tagsStyle.tag} >{`#${item}`}</Text>
+            </Pressable>
+        ))}
         </View>
     )
 }
@@ -62,9 +59,7 @@ function Comment( { username, profile, postContent, postTime, postIp, like, id, 
 
     const postProfile = profile? { uri: profile } : require('@/assets/images/comment/defaultImg.png')
 
-    let likeIcon = useMemo(() => {
-        return iLike? require('@/assets/images/comment/liked.png') : require('@/assets/images/comment/like.png')
-    },[iLike])
+    let likeIcon = useMemo(() => likeU(iLike), [iLike])
 
     const userData: userProfileType = { id, username, profile}
     const { setCurrentUser } = userProfileStore()
@@ -119,9 +114,7 @@ function LikeCommentShare({ like, comment, share, postComment}: CommentType & po
 
     let LCSArrR: number[] = [likenum, comment, share]
     
-    let likeIcon = useMemo(() => {
-        return iLike? require('@/assets/images/comment/liked.png') : require('@/assets/images/comment/like.png')
-    },[iLike])
+    let likeIcon = useMemo(() => likeU(iLike),[iLike])
 
     let LCSArrL = [likeIcon, require('@/assets/images/comment/comment.png'), require('@/assets/images/comment/share.png')]
     
@@ -180,7 +173,7 @@ export default function CommentDetail() {
     const { id } = useLocalSearchParams<{id: string}>()
     const { cache } = useCommentStore()
     const data = cache[id]
-    const postProfile = data.profile? { uri: data.profile } : require('@/assets/images/comment/defaultImg.png')
+    const postProfile = useMemo(() => profileU(data.profile), [data.profile])
     
     const inputRef = useRef<TextInput>(null)
     //发布评论
