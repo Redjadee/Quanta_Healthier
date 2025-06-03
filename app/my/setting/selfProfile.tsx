@@ -1,35 +1,40 @@
 import { Text, View, StyleSheet, Image, Pressable, ViewStyle, ScrollView } from "react-native"
 import MyHeader from "@/components/my/MyHeader"
+import { profileU } from "@/src/utils/commentUtils"
+import { pickImg } from "@/src/utils/pickImg"
+import { useMemo, useState } from "react"
+import { useProfileStore } from "@/src/store/profileStore"
 
 interface ContentType {
     index: number
-    profile?: string
 }
 
-function Content({ index, profile }: ContentType) {
+function Content({ index }: ContentType) {
+    const { profile, id, bgImg, username, updateProfile, updateBgImg } = useProfileStore()
+
     switch (index) {
         case 0: {
-            const postProfile = profile? { uri: profile } : require('@/assets/images/comment/defaultImg.png')
             return (
-            <Pressable>
+            <Pressable
+            onPress={pickImg(updateProfile,true)}>
                 <Image style={{
                 width: 38,
                 height: 38
-            }} source={postProfile} />
+            }} source={typeof profile === "string" ? { uri: profile } : profile} />
             </Pressable>
         )
         }
         case 1: return (
             <Pressable>
                 <Text style={contentStyle.big} >
-                    这里是名字
+                    {username}
                 </Text>
             </Pressable>
         )
         case 2: return (
             <Pressable>
                 <Text style={contentStyle.big}>
-                    123123123
+                    {id}
                 </Text>
             </Pressable>
         )
@@ -69,11 +74,13 @@ function Content({ index, profile }: ContentType) {
             </Pressable>
         )
         case 8: return (
-            <Pressable>
+            <Pressable
+            onPress={pickImg(updateBgImg, false, true)}>
                 <Image style={{
                     width: 50,
                     height: 35
-                }} />
+                }}
+                source={typeof bgImg === "string" ? { uri: bgImg } : bgImg} />
             </Pressable>
         )
     }

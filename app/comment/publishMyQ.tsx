@@ -1,10 +1,11 @@
 import { View, Text, Image, Pressable, StyleSheet, TextInput } from "react-native"
 import { Link, router } from "expo-router"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import PostVisible from "@/components/community/publishnMy/PostVisible"
 import SetPostTime from "@/components/community/publishnMy/SetPostTime"
 import { Switch } from "react-native-ui-lib"
+import { pickImg } from "@/src/utils/pickImg"
 
 function AddTag() {
     const [isFocused, setFocus] = useState(false)
@@ -126,9 +127,33 @@ function SwitchDouble() {
     )
 }
 
+function AddPic() {
+    const [pickedImg, setPickImg] = useState<string | undefined>(undefined)
+    
+    const pic = useMemo(() => (
+        pickedImg && <Image source={{ uri: pickedImg }} style={{width: 100,height: 100, borderRadius: 15}} />
+    ), [pickedImg])
+
+    return (
+        <View style={{ 
+            flexDirection: 'row',
+            gap: 8
+        }}>
+            {pic}
+            <Pressable 
+                style={{width: 10}}  
+                onPress={pickImg(setPickImg, true)} >
+                    <Image source={require('@/assets/images/comment/addPhoto.png')} />
+            </Pressable>
+        </View>
+    )
+}
+
 export default function PublishMyQ() {
     const [isFocused1, setFocus1] = useState(false)
     const [isFocused2, setFocus2] = useState(false)
+
+
     let detectedTag: string[] = []
     return(
         <View style={style.container}>
@@ -138,7 +163,7 @@ export default function PublishMyQ() {
             </View>
 
             <View style={style.body} >
-                <Pressable style={{width: 10}}  onPress={() => {}} ><Image source={require('@/assets/images/comment/addPhoto.png')} ></Image></Pressable>
+                <AddPic />
                 <TextInput 
                     style={[style.text, {fontSize: 22, fontWeight: '500', color: '#777777'}]} 
                     multiline={true} 

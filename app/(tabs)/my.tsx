@@ -1,7 +1,9 @@
 import { Text, View, StyleSheet, Image, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient"
-import { userProfileType } from "@/src/types/userProfile"
 import { router } from "expo-router"
+import { pickImg } from "@/src/utils/pickImg"
+import { useMemo, useState } from "react"
+import { useProfileStore } from "@/src/store/profileStore"
 
 function MyNotification() {
   const label = ['获赞', '评论']
@@ -111,18 +113,13 @@ const blockStyle = StyleSheet.create({
 })
 
 export default function My() {
-  const myData: userProfileType = {
-    username: '今晚一定不熬夜',
-    id: '010123',
-    profile: undefined
-  }
-  const postProfile = myData?.profile? { uri: myData.profile } : require('@/assets/images/comment/defaultImg.png')
+  const { profile, id, bgImg, username, updateProfile, updateBgImg } = useProfileStore()
 
   return (
   <View style={style.container} >
       <View style={{flex: 3, width: '100%', height: '100%'}}>
           <Image
-          source={require('@/assets/images/userProfile/defaultBg.png')}
+          source={typeof bgImg === "string" ? { uri: bgImg } : bgImg}
           style={{
               position: 'absolute', 
               height: '100%',
@@ -131,16 +128,19 @@ export default function My() {
           />
 
           <Pressable style={[style.quickSet, {top: 20, right: 20}]}
-            onPress={() => router.push('/')}
+            onPress={pickImg(updateBgImg, false, true)}
           >
             <Text style={style.quickSetLabel}>设置背景</Text>
           </Pressable>
 
           <View style={style.infor} >
-              <Image style={style.profile} source={postProfile} ></Image>
+              <Pressable
+              onPress={pickImg(updateProfile,true)}>
+                <Image style={style.profile} source={typeof profile === "string" ? { uri: profile } : profile} />
+              </Pressable>
               <View style={{gap: 3}}>
-                  <Text style={{color: 'white', fontSize: 21, fontWeight: '500'}}>{myData.username}</Text>
-                  <Text style={{color: 'white', fontSize: 16}}>ID:   {myData.id}</Text>
+                  <Text style={{color: 'white', fontSize: 21, fontWeight: '500'}}>{username}</Text>
+                  <Text style={{color: 'white', fontSize: 16}}>ID:   {id}</Text>
                   <Text style={{color: 'white', fontSize: 16}}>IP:   广东</Text>
               </View>
           </View>
