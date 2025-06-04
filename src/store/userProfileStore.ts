@@ -1,5 +1,9 @@
 import { create } from "zustand"
-import type { userProfileType } from "../types/userProfile"
+
+type userProfileType = {
+    id: string
+    profile: string | undefined
+}
 
 interface ProfileState {
     currentProfile: userProfileType | null

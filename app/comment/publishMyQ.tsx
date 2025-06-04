@@ -1,11 +1,14 @@
-import { View, Text, Image, Pressable, StyleSheet, TextInput } from "react-native"
+import { View, Text, Image, Pressable, StyleSheet, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native"
 import { Link, router } from "expo-router"
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import PostVisible from "@/components/community/publishnMy/PostVisible"
 import SetPostTime from "@/components/community/publishnMy/SetPostTime"
 import { Switch } from "react-native-ui-lib"
 import { pickImg } from "@/src/utils/pickImg"
+import { useProfileStore } from "@/src/store/profileStore"
+import { postComment } from "@/src/services/comment/postComment"
+import { CommentType } from "@/src/types/commentType"
 
 function AddTag() {
     const [isFocused, setFocus] = useState(false)
@@ -52,7 +55,9 @@ function Third() {
         }
     }
     
-    const re = label.map((value, index) => (
+    return (
+        <>
+        {label.map((value, index) => (
         <View key={`Publish${index}icon`} style={{ width: '100%', borderBottomColor: 'rgba(153, 153, 153, 0.32)',  borderBottomWidth: 1}} >
         <Pressable style={{
             flexDirection: 'row',
@@ -71,10 +76,7 @@ function Third() {
             }} source={require('@/assets/images/comment/arrowPub.png')} ></Image>
         </Pressable>
         </View>
-    ))
-    return (
-        <>
-        {re}
+        ))}
         <PostVisible visible1={visible1} setVisible1={setVisible1} selected={selected1} setSelect={setSelect1} />
         <SetPostTime visible={visible2} setVisible={setVisible2} />
         </>
@@ -137,7 +139,8 @@ function AddPic() {
     return (
         <View style={{ 
             flexDirection: 'row',
-            gap: 8
+            gap: 8,
+            right: '39%'
         }}>
             {pic}
             <Pressable 
@@ -152,18 +155,43 @@ function AddPic() {
 export default function PublishMyQ() {
     const [isFocused1, setFocus1] = useState(false)
     const [isFocused2, setFocus2] = useState(false)
+    const [titleValue, setTitleValue] = useState('')
+    const [contentValue, setContentValue] = useState('')
+    const title = useRef<TextInput>(null)
+    const content = useRef<TextInput>(null)
+    const { id, username, profile } = useProfileStore()
+    
+    const data: CommentType = {
+      id,
+      username,
+      profile,
+      postTitle: titleValue,
+      postContent: contentValue,
+      postTime: "",
+    }
+    
+    const handleSubmit = () => {
+        if(titleValue) {
+            postComment({ id, data })
+            setTimeout(() => router.push('/community'), 1000)
+        }
+        else {alert('请输入内容喔')}
+    }
 
-
-    let detectedTag: string[] = []
     return(
+        <TouchableWithoutFeedback 
+        onPress={() => {
+            Keyboard.dismiss()
+            title.current?.blur()
+            content.current?.blur()
+        }}>
         <View style={style.container}>
             <View style={style.header} >
                 <Link href='/community'><Image source={require('@/assets/images/leftArrow.png')}/></Link>
                 <Pressable><Text style={style.draftBox} >草稿箱</Text></Pressable>
             </View>
-
+            <AddPic />
             <View style={style.body} >
-                <AddPic />
                 <TextInput 
                     style={[style.text, {fontSize: 22, fontWeight: '500', color: '#777777'}]} 
                     multiline={true} 
@@ -172,16 +200,24 @@ export default function PublishMyQ() {
                     placeholderTextColor={'#FFA019'}
                     scrollEnabled={false} 
                     onFocus={() => setFocus1(true)} 
-                    onBlur={() => setFocus1(false)}></TextInput>
-                <TextInput 
+                    onBlur={() => setFocus1(false)}
+                    ref={title}
+                    value={titleValue}
+                    onChangeText={setTitleValue}></TextInput>
+                <TextInput
                     style={[style.text, {fontSize: 18, color: '#777777' }]}  
                     multiline={true} 
                     cursorColor={'#FFA019'} 
                     placeholder={isFocused2? '' : '添加正文'}
-                    scrollEnabled={false} 
+                    scrollEnabled={false}
                     onFocus={() => setFocus2(true)} 
-                    onBlur={() => setFocus2(false)}></TextInput>
+                    onBlur={() => setFocus2(false)}
+                    ref={content}
+                    value={contentValue}
+                    onChangeText={setContentValue}
+                    ></TextInput>
             </View>
+            
 
             <View style={style.footer} >
                 <AddTag />
@@ -196,12 +232,15 @@ export default function PublishMyQ() {
                     height: '100%', 
                     alignItems: 'center', 
                     justifyContent: 'center'}}
-                onPress={() => router.push('/community')}    
+                onPress={() => {
+                    handleSubmit()
+                }}    
                 >
                     <Text style={style.buttonLabel} >发布</Text>
                 </Pressable>
             </LinearGradient>
         </View>
+        </TouchableWithoutFeedback>
     )
 }
 
@@ -209,7 +248,8 @@ const style = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: "center"
     },
     header: {
         flexDirection: 'row',

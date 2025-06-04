@@ -1,12 +1,11 @@
 import { View, Text, StyleSheet, Image, Pressable, TextInput, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native"
-import { useState, useMemo, useRef, useEffect, useCallback } from "react"
-import { Link, useLocalSearchParams, router } from "expo-router"
+import { useState, useMemo, useRef, useCallback } from "react"
+import { useLocalSearchParams, router } from "expo-router"
 import { LinearGradient } from "expo-linear-gradient"
 import type { CommentType, commentCommentType } from "@/src/types/commentType"
 import { useCommentStore } from "@/src/store/commentStore"
 import { useShare } from "@/src/context/ShareContext"
 import { userProfileStore } from "@/src/store/userProfileStore"
-import { userProfileType } from "@/src/types/userProfile"
 import { likeU, profileU } from "@/src/utils/commentUtils"
 ////////////////////////////
 function UploadedImg({ uploadImage }: CommentType) {  
@@ -61,7 +60,7 @@ function Comment( { username, profile, postContent, postTime, postIp, like, id, 
 
     let likeIcon = useMemo(() => likeU(iLike), [iLike])
 
-    const userData: userProfileType = { id, username, profile}
+    const userData = { id, username, profile}
     const { setCurrentUser } = userProfileStore()
     const HandleUserRouter = () => {
         setCurrentUser(userData)
@@ -110,9 +109,9 @@ interface postCommentType {
 function LikeCommentShare({ like, comment, share, postComment}: CommentType & postCommentType) {
     const [iLike, setILike] = useState(false)
     const { setShare } = useShare()
-    const [likenum, setLikenum] = useState(like)
+    const [likenum, setLikenum] = useState(like ?? 0)
 
-    let LCSArrR: number[] = [likenum, comment, share]
+    let LCSArrR: number[] = [likenum, comment ?? 0, share ?? 0]
     
     let likeIcon = useMemo(() => likeU(iLike),[iLike])
 
@@ -202,12 +201,14 @@ export default function CommentDetail() {
 
     //渲染评论
     const commentList = useMemo(() => {
+        if(data.commentComment)
         return data.commentComment.map((item, index) => (
             <Comment {...{...item, handleResponse, handleBlur}} key={`C${id}C${index}`} />
         ))
     },[data.commentComment])
 
-    const userData: userProfileType = { id: data.id, username: data.username, profile: data.profile }
+    //个人主页
+    const userData = { id: data.id, username: data.username, profile: data.profile }
     const { setCurrentUser } = userProfileStore()
     const HandleUserRouter = () => {
         setCurrentUser(userData)
@@ -241,7 +242,7 @@ export default function CommentDetail() {
             <ScrollView>
             <UploadedImg {...data} />
             <View style={style.body} >
-                <Text style={bodyStyle.postContent} >{data.postContent}</Text>
+                <Text style={bodyStyle.postTitle} >{data.postTitle}</Text>
                 <Tags {...data} />
                 <View style={bodyStyle.bodyFooter} >
                     <Text style={{color: '#888888', fontSize: 12}} >{data.postTime}</Text>
@@ -338,7 +339,7 @@ const headerStyle = StyleSheet.create({
 })
 
 const bodyStyle = StyleSheet.create({
-    postContent: {
+    postTitle: {
         fontSize: 20,
         color: '#555555'
     },

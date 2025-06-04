@@ -5,7 +5,7 @@ import { useDate } from "@/src/context/DateContext"
 import CalendarStrip, { IDayComponentProps } from 'react-native-calendar-strip'
 import moment from 'moment'
 
-function Header({index }: {index: number }) {
+function Header({ index }: {index: number }) {
     return (
         <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',paddingVertical: 15, width: '100%'}}>
             <Link style={{position: 'absolute', left: 25}} href={'/'}><Image source={require('@/assets/images/leftArrow.png')} /></Link>
@@ -14,7 +14,7 @@ function Header({index }: {index: number }) {
     )
 }
 
-export default function ShuinChangHeader({index }: {index: number }) {
+export default function ShuinChangHeader({index, markedDates }: {index: number, markedDates: moment.Moment[] }) {
     const { setedMon, setedYear } = useDate()
     const [selectedDate, setSelectedDate] = useState(moment());
     const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -62,8 +62,11 @@ export default function ShuinChangHeader({index }: {index: number }) {
             (!markedDates.some((d) => moment(d).isSame(displayDate.clone().subtract(1, 'day'), 'day')));
         const isEndOfMarkedRange = isMarked && 
             (!markedDates.some((d) => moment(d).isSame(displayDate.clone().add(1, 'day'), 'day')));
+        let cnt = 0
         return (
-            <View style={{ alignItems: 'center', justifyContent: 'center', gap: 5}}>
+            <View 
+            style={{ alignItems: 'center', justifyContent: 'center', gap: 5}}
+            key={`daycomponent${cnt++}`}>
                 <Text style={{
                     color: '#999999',
                     fontSize: 16,
@@ -142,13 +145,7 @@ export default function ShuinChangHeader({index }: {index: number }) {
             useIsoWeekday={false}
             selectedDate={selectedDate}
             dayComponent={customDay}
-            markedDates={[
-                moment().startOf('week'), 
-                moment().startOf('week').add(1, 'days'),
-                moment().startOf('week').add(2, 'days'),
-                moment().startOf('week').add(3, 'days'),
-                moment().startOf('week').add(4, 'days'),
-            ]}
+            markedDates={markedDates}
             />
         </View>
     )

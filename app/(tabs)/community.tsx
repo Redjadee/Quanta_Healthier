@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { Text, TextInput, View, StyleSheet, Pressable, Image, ScrollView } from "react-native";
+import { Text, TextInput, View, StyleSheet, Pressable, Image, ScrollView, Alert } from "react-native";
 import CommunityTab from "@/components/community/CommunityTab"
 import PublishnMy from "@/components/community/PublishnMy"
 import HotTopic from "@/components/community/HotTopic"
@@ -8,9 +8,27 @@ import Article from "@/components/community/Article"
 import Comment from "@/components/community/Comment"
 import { CommentType, commentCommentType } from "@/src/types/commentType"
 import Share from "@/components/community/Share"
-import { useShare } from "@/src/context/ShareContext"
+import { getAllComments } from "@/src/services/comment/getComment"
 
 function Question() {
+  const [commentList, setCommentList] = useState<CommentType[]>([])
+  const [loading, setloading] = useState(false)
+  const [error, setError] = useState('')
+  
+  useEffect(() => {
+    const fetchComments = async () => {
+      setloading(true)
+      const result = await getAllComments()
+      if(result.success) {
+        setCommentList(result.data)
+      } else {
+        setError(result.message ?? '')
+        // Alert.alert('获取评论失败, 请稍后再试') //跳信息有点烦
+      }
+    }
+    fetchComments()
+  }, [])
+
   //假数据
   let comment1: commentCommentType = {
     id: '00124',
@@ -85,7 +103,7 @@ function Question() {
     username: '今晚一定睡',
     profile: undefined,
 
-    postContent: '还是明天再睡吧',
+    postTitle: '还是明天再睡吧',
     postTime: '刚刚',
     postIp: '广东',
 
@@ -102,7 +120,7 @@ function Question() {
     username: '健康生活家',
     profile: undefined,
 
-    postContent: '保持微笑，健康常在！',
+    postTitle: '保持微笑，健康常在！',
     postTime: '5小时前',
     postIp: '广州',
 
@@ -114,29 +132,13 @@ function Question() {
     commentComment: []
   };
 
-  let data3: CommentType = {
-    id: '00130',
-    username: '健康饮食者',
-    profile: undefined,
-
-    postContent: '多吃蔬菜，少吃油炸食品！',
-    postTime: '6小时前',
-    postIp: '武汉',
-
-    like: 95,
-    comment: 120,
-    share: 180,
-    tags: ['饮食健康', '健康生活'],
-
-    commentComment: []
-  };
 
   let data4: CommentType = {
     id: '00131',
     username: '瑜伽爱好者',
     profile: undefined,
 
-    postContent: '每天练瑜伽，身心更健康！',
+    postTitle: '每天练瑜伽，身心更健康！',
     postTime: '7小时前',
     postIp: '成都',
 
@@ -156,7 +158,6 @@ function Question() {
       <View style={questionStyle.list} >
         <Comment data={data} />
         <Comment data={data2} />
-        <Comment data={data3} />
         <Comment data={data4} />
       </View>
     </View>

@@ -3,6 +3,7 @@ import ShuinChangHeader from "@/components/index/ShuinChangHeader"
 import { router } from "expo-router"
 import { Switch } from "react-native-ui-lib"
 import { useState } from "react";
+import moment from "moment";
 
 function Weather() {
     let weatherIndex = 0
@@ -261,15 +262,18 @@ const moodStyle = StyleSheet.create({
     }
 })
 
-function Pressure() {
-
-}
 
 export default function ChangDao() {
+    const markedDates = [
+        moment().startOf('week'), 
+        moment().startOf('week').add(1, 'days'),
+        moment().startOf('week').add(2, 'days'),
+    ]
+    
     return (
         <View style={style.container}>
             <ScrollView>
-                <ShuinChangHeader index={1} />
+                <ShuinChangHeader index={1} markedDates={markedDates} />
                 <View style={style.block}>
                     <View style={style.header}>
                         <Weather />

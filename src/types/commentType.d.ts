@@ -15,17 +15,20 @@ export type commentCommentType ={
 export type CommentType = {
     id: string
     username: string
-    profile: string | undefined
+    profile: string | undefined | ImageSourcePropType
 
-    postContent: string
+    postTitle: string
+    postContent?: string
     postTime: string
-    postIp: string
+    postIp?: string
     uploadImage?: string[]
     tags?: string[]
 
-    like: number
-    comment: number
-    share: number
+    like?: number = 0
+    comment?: number = 0
+    share?: number = 0
 
-    commentComment: commentCommentType[]
+    liked?: boolean = false
+
+    commentComment?: commentCommentType[]
 }

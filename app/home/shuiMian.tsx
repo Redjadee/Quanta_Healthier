@@ -3,141 +3,7 @@ import ShuinChangHeader from "@/components/index/ShuinChangHeader"
 import React, { useCallback, useState, useRef } from "react";
 import moment from "moment";
 import { Switch } from "react-native-ui-lib";
-
-interface TimePickerType {
-    getTime: (hour: number, minute: number) => void
-}
-
-function TimePicker({ getTime }: TimePickerType) {
-  const [hour, setHour] = useState(23);
-  const [minute, setMinute] = useState(0);
-  const hourScrollRef = useRef<ScrollView>(null);
-  const minuteScrollRef = useRef<ScrollView>(null);
-
-  // 生成数据（包含前后缓冲项实现伪循环）
-  const hours = [...Array(72)].map((_, i) => `${i % 24}`.padStart(2, '0'));
-  const minutes = [...Array(180)].map((_, i) => `${i % 60}`.padStart(2, '0'));
-
-  // 初始化滚动到中间位置
-  React.useEffect(() => {
-    hourScrollRef.current?.scrollTo({ 
-        y: 40 * (24 + 23) - 40,  
-        animated: false 
-    });
-    minuteScrollRef.current?.scrollTo({ y: 40 * 60 - 40, animated: false });
-    setTimeout(() => {
-        hourScrollRef.current?.scrollTo({ y: 40 * (24 + 23) - 40, animated: false });
-        minuteScrollRef.current?.scrollTo({ y: 40 * 60 - 40, animated: false });
-    }, 50); //强制重绘  
-}, []);
-
-  const handleHourScroll = (e: any) => {
-    const y = e.nativeEvent.contentOffset.y;
-    const newHour = ((Math.round(y / 40) + 1) % 24 + 24) % 24;
-    setHour(newHour);
-  };
-
-  const handleMinuteScroll = (e: any) => {
-    const y = e.nativeEvent.contentOffset.y;
-    const newMinute = ((Math.round(y / 40) + 1) % 60 + 60) % 60;
-    setMinute(newMinute);
-  };
-
-  return (
-    <>
-    <View style={styles.container}>
-      {/* 小时选择器 */}
-      <ScrollView
-        ref={hourScrollRef}
-        showsVerticalScrollIndicator={false}
-        snapToInterval={40}
-        decelerationRate="fast"
-        onMomentumScrollEnd={handleHourScroll}
-        style={styles.scroll}
-      >
-        {hours.map((h, i) => (
-          <View key={`shuimianItem${i}`} style={styles.item}>
-            <Text style={[styles.itemLabel, hour === Number(h) && styles.selected]}>
-            {h}
-          </Text>
-          </View>
-        ))}
-      </ScrollView>
-
-        <View style={{
-                position: 'absolute',
-                top: '30%',
-                left: 0,
-                alignItems: 'center',
-                backgroundColor: 'rgba(204, 204, 204, 0.3)',
-                width: '100%',
-                height: 40,
-                zIndex: 3
-            }}>
-            <Text style={{
-                color: '#333333',
-                fontSize: 23,
-                fontWeight: '700'
-            }}>:</Text>
-        </View>
-
-      {/* 分钟选择器 */}
-      <ScrollView
-        ref={minuteScrollRef}
-        showsVerticalScrollIndicator={false}
-        snapToInterval={40}
-        decelerationRate="fast"
-        onMomentumScrollEnd={handleMinuteScroll}
-        style={styles.scroll}
-      >
-        {minutes.map((m, i) => (
-          <View key={`m-${i}`} style={styles.item}>
-            <Text style={[styles.itemLabel, minute === Number(m) && styles.selected]}>
-                {m}
-            </Text>
-          </View>
-        ))}
-      </ScrollView>
-    </View>
-    <Pressable 
-         style={reminderStyle.setButton}
-         onPress={() => getTime(hour, minute)}>
-            <Text style={reminderStyle.buttonLabel} >设置</Text>
-    </Pressable>
-    </>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '70%',
-    height: 140,
-    gap: '22%'
-  },
-  scroll: {
-    height: 140,
-    width: 70,
-  },
-  item: {
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#DCD8FD',
-    width: 100,
-  },
-  itemLabel: {
-    fontSize: 18,
-    color: '#666666'
-  },
-  selected: {
-    fontSize: 22,
-    color: '#333333'
-  }
-});
-
-
+import TimePicker from "@/components/index/TimePicker"
 
 function Reminder() {
     const [ enabled, setEnabled ] = useState(false)
@@ -196,11 +62,7 @@ const reminderStyle = StyleSheet.create({
         borderRadius: 20,
         marginVertical: 20
     },
-    buttonLabel: {
-        fontSize: 16,
-        fontWeight: 500,
-        color: 'white'
-    },
+
     footer: {
         flexDirection: "row",
         backgroundColor: '#F8F8F8',
@@ -233,6 +95,7 @@ export default function ShuiMian() {
     let stars: React.JSX.Element[] = []
     //...
 
+
     const content = [
         (<Text style={ctStyle.number}>{asleepTime.format('HH:mm')}</Text>),
         (<Text style={ctStyle.number}>{wakeupTime.format('HH:mm')}</Text>),
@@ -262,9 +125,17 @@ export default function ShuiMian() {
         (<View style={{gap: 3, flexDirection: 'row'}}>{star}{star}{star}{star}{star}</View>),
     ]
 
+    const markedDates = [
+        moment().startOf('week'), 
+        moment().startOf('week').add(1, 'days'),
+        moment().startOf('week').add(2, 'days'),
+        moment().startOf('week').add(3, 'days'),
+        moment().startOf('week').add(4, 'days'),
+    ]
+
     return (
         <View>
-            <ShuinChangHeader index={0} />
+            <ShuinChangHeader index={0} markedDates={markedDates}/>
             <View style={{
                 width: '100%',
                 height: '80%',

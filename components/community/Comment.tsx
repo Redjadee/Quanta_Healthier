@@ -191,7 +191,7 @@ export default function Comment( { data, headerhide = false, fakeShadow = false,
         ]} 
             onPress={HandleCommentRouter} >
             {headerhide || <Header {...data} />}
-            <Text style={style.postContent} >{data.postContent}</Text>
+            <Text style={style.postTitle} >{data.postTitle}</Text>
             <UploadedImg {...data} />
             <Tags {...data} />
             <LikeCommentShare {...{ ...data, HandleCommentRouter, setShare, liked }} />
@@ -229,7 +229,7 @@ const style = StyleSheet.create({
         color: '#888888',
         fontSize: 12,
     },
-    postContent: {
+    postTitle: {
         color: '#555555',
         fontSize: 18,
         marginBottom: 8,
