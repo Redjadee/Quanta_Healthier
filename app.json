@@ -16,8 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "usesCleartextTraffic": true,
-      "package": "com.redjade.Healthier"
+      "package": "com.redjade.Healthier",
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "bundler": "metro",
