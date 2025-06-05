@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, Image, ScrollView, Pressable, Animated } from "
 import { Link } from "expo-router"
 import { useCallback, useEffect, useMemo, useState, useRef } from "react"
 import { useDate } from "@/src/context/DateContext"
-import CalendarStrip, { IDayComponentProps } from 'react-native-calendar-strip'
+// import CalendarStrip, { IDayComponentProps } from 'react-native-calendar-strip'
 import moment from 'moment'
 
 function Header({ index }: {index: number }) {
@@ -45,59 +45,59 @@ export default function ShuinChangHeader({index, markedDates }: {index: number, 
         }).start();
     };
 
-    const customDay = useCallback((props: IDayComponentProps) => {
-        const { date, selected, markedDates } = props
-        const today = moment();
-        const startOfWeek = today.clone().startOf('week');
-        const displayDate = startOfWeek.clone().add(date.days(), 'days');
-        const dayOfWeek = displayDate.day();
-        const weekdays = ['日','一', '二', '三', '四', '五', '六'];
-        const dayOfMonth = displayDate.date();
+    // const customDay = useCallback((props: IDayComponentProps) => {
+    //     const { date, selected, markedDates } = props
+    //     const today = moment();
+    //     const startOfWeek = today.clone().startOf('week');
+    //     const displayDate = startOfWeek.clone().add(date.days(), 'days');
+    //     const dayOfWeek = displayDate.day();
+    //     const weekdays = ['日','一', '二', '三', '四', '五', '六'];
+    //     const dayOfMonth = displayDate.date();
         
-        // 判断是否是marked日期
-        const isMarked = markedDates && Array.isArray(markedDates) && 
-            markedDates.some((d) => moment(d).isSame(displayDate, 'day'))
-        // 判断是否是连续marked日期的一部分
-        const isStartOfMarkedRange = isMarked && 
-            (!markedDates.some((d) => moment(d).isSame(displayDate.clone().subtract(1, 'day'), 'day')));
-        const isEndOfMarkedRange = isMarked && 
-            (!markedDates.some((d) => moment(d).isSame(displayDate.clone().add(1, 'day'), 'day')));
-        let cnt = 0
-        return (
-            <View 
-            style={{ alignItems: 'center', justifyContent: 'center', gap: 5}}
-            key={`daycomponent${cnt++}`}>
-                <Text style={{
-                    color: '#999999',
-                    fontSize: 16,
-                }}>{weekdays[dayOfWeek]}</Text>
-                <Pressable 
-                    onPress={() => handleDatePress(displayDate)}
-                    style={[{
-                        width: 40,
-                        height: 40,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        zIndex: 2   
-                    }, selected && style.selected]}
-                >
-                    <Text style={[{ 
-                        color: '#999999',
-                        fontSize: 16,
-                        fontWeight: '700',
+    //     // 判断是否是marked日期
+    //     const isMarked = markedDates && Array.isArray(markedDates) && 
+    //         markedDates.some((d) => moment(d).isSame(displayDate, 'day'))
+    //     // 判断是否是连续marked日期的一部分
+    //     const isStartOfMarkedRange = isMarked && 
+    //         (!markedDates.some((d) => moment(d).isSame(displayDate.clone().subtract(1, 'day'), 'day')));
+    //     const isEndOfMarkedRange = isMarked && 
+    //         (!markedDates.some((d) => moment(d).isSame(displayDate.clone().add(1, 'day'), 'day')));
+    //     let cnt = 0
+    //     return (
+    //         <View 
+    //         style={{ alignItems: 'center', justifyContent: 'center', gap: 5}}
+    //         key={`daycomponent${cnt++}`}>
+    //             <Text style={{
+    //                 color: '#999999',
+    //                 fontSize: 16,
+    //             }}>{weekdays[dayOfWeek]}</Text>
+    //             <Pressable 
+    //                 onPress={() => handleDatePress(displayDate)}
+    //                 style={[{
+    //                     width: 40,
+    //                     height: 40,
+    //                     alignItems: 'center',
+    //                     justifyContent: 'center',
+    //                     zIndex: 2   
+    //                 }, selected && style.selected]}
+    //             >
+    //                 <Text style={[{ 
+    //                     color: '#999999',
+    //                     fontSize: 16,
+    //                     fontWeight: '700',
 
-                    }, isMarked && style.markedText]}>{dayOfMonth}</Text>
-                </Pressable>
-                {isMarked && 
-                    <View style={[
-                        style.marked, 
-                        {bottom: 0},
-                        isStartOfMarkedRange && style.markedStart,
-                        isEndOfMarkedRange && style.markedEnd 
-                    ]}></View>  }
-            </View>
-        );
-    }, [selectedDate, scaleAnim])
+    //                 }, isMarked && style.markedText]}>{dayOfMonth}</Text>
+    //             </Pressable>
+    //             {isMarked && 
+    //                 <View style={[
+    //                     style.marked, 
+    //                     {bottom: 0},
+    //                     isStartOfMarkedRange && style.markedStart,
+    //                     isEndOfMarkedRange && style.markedEnd 
+    //                 ]}></View>  }
+    //         </View>
+    //     );
+    // }, [selectedDate, scaleAnim])
 
     const style = StyleSheet.create({
         selected: {
@@ -125,10 +125,8 @@ export default function ShuinChangHeader({index, markedDates }: {index: number, 
         },
     })
 
-    return (
-        <View style={{backgroundColor: '#FEE8C9', justifyContent: 'center', alignItems: 'center', zIndex: 1}}>
-            <Header index={index} />
-            <CalendarStrip
+/*
+<CalendarStrip
             style={{ 
                 height: 90,
                 width: '90%',
@@ -144,9 +142,15 @@ export default function ShuinChangHeader({index, markedDates }: {index: number, 
             startingDate={moment().clone().startOf('week')}
             useIsoWeekday={false}
             selectedDate={selectedDate}
-            dayComponent={customDay}
+            // dayComponent={customDay}
             markedDates={markedDates}
             />
+*/
+
+    return (
+        <View style={{backgroundColor: '#FEE8C9', justifyContent: 'center', alignItems: 'center', zIndex: 1}}>
+            <Header index={index} />
+            
         </View>
     )
 }
