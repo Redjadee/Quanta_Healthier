@@ -1,9 +1,0 @@
-# 忽略所有文件（默认行为）
-*
-
-# 包含必要的构建文件
-!app.json
-!package.json
-!scripts/
-!src/
-!assets/
